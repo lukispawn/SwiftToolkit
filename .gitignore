@@ -3,6 +3,8 @@
 Packages/
 Package.pins
 .swiftpm/
+*.xcodeproj
+xcuserdata/
 
 # Xcode
 *.xcodeproj/
