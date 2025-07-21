@@ -262,6 +262,42 @@ Configuration(
 )
 ```
 
+#### Custom Service Providers
+
+For complex loading logic or dependency injection, create custom services that conform to `LoadableElementProvider`:
+
+```swift
+// Protocol definition for type safety
+protocol ProfileFetchServiceType: LoadableElementProvider where Model == UserDTO {}
+
+// Custom service implementation
+struct ProfileFetchService: ProfileFetchServiceType {
+    let apiConnect: HomePhysioConnect
+    
+    func load() async throws -> UserDTO {
+        let service = try await apiConnect.requireAuthenticatedService()
+        return try await service.getProfile().user
+    }
+}
+
+// Usage with custom service
+let profileStore = LoadableElementStore(
+    service: ProfileFetchService(apiConnect: apiConnect),
+    initial: nil,
+    configuration: .init(
+        refreshInterval: 60 * 11,
+        debug: true,
+        prefix: "User profile"
+    )
+)
+```
+
+This pattern is ideal for:
+- **Dependency injection**: Pass services/dependencies to the provider
+- **Complex loading logic**: Multi-step data fetching or transformation
+- **Reusable providers**: Share the same provider across multiple stores
+- **Testing**: Easy to mock and test provider logic separately
+
 #### Dynamic Source Updates
 ```swift
 // Change data source dynamically
