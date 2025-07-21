@@ -1,0 +1,4 @@
+module SwiftToolkitPackageTests {
+    header "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitPackageTests.build/SwiftToolkitPackageTests-Swift.h"
+    requires objc
+}

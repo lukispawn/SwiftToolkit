@@ -1,0 +1,4 @@
+module SwiftSyntax600 {
+    header "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftSyntax600.build/SwiftSyntax600-Swift.h"
+    requires objc
+}

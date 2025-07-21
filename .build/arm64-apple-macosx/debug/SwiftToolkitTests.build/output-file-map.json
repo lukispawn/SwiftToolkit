@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/master.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/SwiftToolkitTests/SwiftToolkitTests.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests.swiftdeps"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "": {
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/master.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/AsyncSequenceValidationDiagram.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/AsyncSequenceValidationDiagram.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/AsyncSequenceValidationDiagram.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/AsyncSequenceValidationDiagram~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/AsyncSequenceValidationDiagram.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/Clock.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Clock.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Clock.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Clock~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Clock.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/Event.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Event.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Event.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Event~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Event.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/Expectation.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Expectation.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Expectation.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Expectation~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Expectation.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/Input.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Input.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Input.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Input~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Input.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/Job.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Job.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Job.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Job~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Job.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/Locking.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Locking.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Locking.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Locking~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Locking.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/SourceLocation.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/SourceLocation.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/SourceLocation.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/SourceLocation~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/SourceLocation.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/TaskDriver.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/TaskDriver.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/TaskDriver.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/TaskDriver~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/TaskDriver.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/Test.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Test.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Test.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Test~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Test.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/Theme.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Theme.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Theme.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Theme~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/Theme.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncSequenceValidation/WorkQueue.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/WorkQueue.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/WorkQueue.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/WorkQueue~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncSequenceValidation.build/WorkQueue.swiftdeps"
+  }
+}

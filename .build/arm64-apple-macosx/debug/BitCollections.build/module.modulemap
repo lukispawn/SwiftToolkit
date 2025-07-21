@@ -1,0 +1,4 @@
+module BitCollections {
+    header "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/BitCollections.build/BitCollections-Swift.h"
+    requires objc
+}

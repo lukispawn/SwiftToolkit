@@ -1,0 +1,4 @@
+module SwiftDiagnostics {
+    header "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftDiagnostics.build/SwiftDiagnostics-Swift.h"
+    requires objc
+}

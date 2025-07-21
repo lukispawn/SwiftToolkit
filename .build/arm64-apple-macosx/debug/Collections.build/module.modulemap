@@ -1,0 +1,4 @@
+module Collections {
+    header "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Collections.build/Collections-Swift.h"
+    requires objc
+}

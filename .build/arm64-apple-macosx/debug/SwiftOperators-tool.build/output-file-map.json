@@ -1,0 +1,65 @@
+{
+  "": {
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/master.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/Operator.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/Operator.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/Operator.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/Operator~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/Operator.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/OperatorError+Diagnostics.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorError+Diagnostics.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorError+Diagnostics.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorError+Diagnostics~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorError+Diagnostics.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/OperatorError.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorError.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorError.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorError~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorError.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/OperatorTable+Defaults.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Defaults.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Defaults.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Defaults~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Defaults.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/OperatorTable+Folding.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Folding.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Folding.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Folding~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Folding.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/OperatorTable+Semantics.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Semantics.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Semantics.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Semantics~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable+Semantics.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/OperatorTable.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/OperatorTable.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/PrecedenceGraph.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/PrecedenceGraph.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/PrecedenceGraph.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/PrecedenceGraph~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/PrecedenceGraph.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/PrecedenceGroup.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/PrecedenceGroup.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/PrecedenceGroup.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/PrecedenceGroup~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/PrecedenceGroup.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/SwiftOperators/SyntaxSynthesis.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/SyntaxSynthesis.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/SyntaxSynthesis.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/SyntaxSynthesis~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftOperators-tool.build/SyntaxSynthesis.swiftdeps"
+  }
+}

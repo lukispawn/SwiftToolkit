@@ -1,0 +1,4 @@
+module AsyncAlgorithms_XCTest {
+    header "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncAlgorithms_XCTest.build/AsyncAlgorithms_XCTest-Swift.h"
+    requires objc
+}

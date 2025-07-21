@@ -1,0 +1,71 @@
+{
+  "": {
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/master.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Async/AsyncChannel+ToStream.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncChannel+ToStream.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncChannel+ToStream.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncChannel+ToStream~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncChannel+ToStream.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Async/AsyncLock.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncLock.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncLock.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncLock~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncLock.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Async/AsyncThrottler.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncThrottler.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncThrottler.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncThrottler~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncThrottler.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Async/DebounceAsync.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/DebounceAsync.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/DebounceAsync.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/DebounceAsync~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/DebounceAsync.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Cancellation/AsyncCancelBag.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncCancelBag.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncCancelBag.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncCancelBag~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncCancelBag.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Cancellation/CombineCancelBag.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/CombineCancelBag.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/CombineCancelBag.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/CombineCancelBag~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/CombineCancelBag.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Files/LocalFileURL.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LocalFileURL.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LocalFileURL.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LocalFileURL~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LocalFileURL.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Logging/LoggerWrapper.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LoggerWrapper.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LoggerWrapper.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LoggerWrapper~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LoggerWrapper.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Storage/StorageCodable.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/StorageCodable.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/StorageCodable.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/StorageCodable~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/StorageCodable.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Streams/MulticastAsyncStream.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/SwiftToolkit.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/SwiftToolkit.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/SwiftToolkit.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/SwiftToolkit~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/SwiftToolkit.swiftdeps"
+  }
+}

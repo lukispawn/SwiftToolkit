@@ -1,0 +1,41 @@
+{
+  "": {
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/master.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-collections/Sources/HeapModule/Heap+Descriptions.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+Descriptions.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+Descriptions.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+Descriptions~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+Descriptions.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-collections/Sources/HeapModule/Heap+ExpressibleByArrayLiteral.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+ExpressibleByArrayLiteral.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+ExpressibleByArrayLiteral.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+ExpressibleByArrayLiteral~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+ExpressibleByArrayLiteral.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-collections/Sources/HeapModule/Heap+Invariants.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+Invariants.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+Invariants.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+Invariants~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+Invariants.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-collections/Sources/HeapModule/Heap+UnsafeHandle.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+UnsafeHandle.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+UnsafeHandle.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+UnsafeHandle~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap+UnsafeHandle.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-collections/Sources/HeapModule/Heap.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/Heap.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-collections/Sources/HeapModule/_HeapNode.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/_HeapNode.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/_HeapNode.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/_HeapNode~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/HeapModule.build/_HeapNode.swiftdeps"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncAlgorithms_XCTest.build/master.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-async-algorithms/Sources/AsyncAlgorithms_XCTest/ValidationTest.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncAlgorithms_XCTest.build/ValidationTest.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncAlgorithms_XCTest.build/ValidationTest.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncAlgorithms_XCTest.build/ValidationTest~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/AsyncAlgorithms_XCTest.build/ValidationTest.swiftdeps"
+  }
+}
