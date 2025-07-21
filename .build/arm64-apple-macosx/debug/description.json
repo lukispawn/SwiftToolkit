@@ -3268,6 +3268,355 @@
       "tempsPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/InternalCollectionsUtilities.build",
       "wholeModuleOptimization" : false
     },
+    "C.LoadableModel-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/sources",
+      "importPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Helpers/CombineExtension.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Helpers/LoadableReachabilityService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/DefaultCollectionModifier.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/DefaultCollectionProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionModifier.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadedCollectionStatus.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/DefaultElementProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadableElementProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadableElementStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadedElementStatus.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/LoadableModelType.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/LoadableState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/SwiftToolkit.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/AsyncAlgorithms.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "LoadableModel",
+      "moduleOutputPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/LoadableModel.swiftmodule",
+      "objects" : [
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/CombineExtension.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableReachabilityService.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultCollectionModifier.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultCollectionProvider.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionModifier.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionProvider.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionStore.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadedCollectionStatus.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultElementProvider.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableElementProvider.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableElementStore.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadedElementStatus.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableModelType.swift.o",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableState.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-enable-batch-mode",
+        "-index-store-path",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-module-cache-path",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableModel-Swift.h",
+        "-swift-version",
+        "6",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "swifttoolkit"
+      ],
+      "outputFileMapPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/CombineExtension.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableReachabilityService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultCollectionModifier.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultCollectionProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionModifier.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadedCollectionStatus.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultElementProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableElementProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableElementStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadedElementStatus.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableModelType.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/LoadableModel.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Helpers/CombineExtension.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Helpers/LoadableReachabilityService.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/DefaultCollectionModifier.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/DefaultCollectionProvider.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionModifier.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionProvider.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionStore.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadedCollectionStatus.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/DefaultElementProvider.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadableElementProvider.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadableElementStore.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadedElementStatus.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/LoadableModelType.swift",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/LoadableState.swift"
+      ],
+      "tempsPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.LoadableModelTests-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build/sources",
+      "importPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/LoadableModelTests/LoadableModelTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/LoadableModel.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/Testing.swiftmodule"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<TestingMacros-arm64-apple-macosx15.0-debug-tool.exe>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "LoadableModelTests",
+      "moduleOutputPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/LoadableModelTests.swiftmodule",
+      "objects" : [
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build/LoadableModelTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-enable-batch-mode",
+        "-index-store-path",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-Xcc",
+        "-fmodule-map-file=/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/_SwiftSyntaxCShims/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/_SwiftSyntaxCShims/include",
+        "-Xcc",
+        "-fmodule-map-file=/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-testing/Sources/_TestingInternals/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-testing/Sources/_TestingInternals/include",
+        "-module-cache-path",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "6",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "swifttoolkit",
+        "-Xfrontend",
+        "-load-plugin-executable",
+        "-Xfrontend",
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/TestingMacros-tool#TestingMacros"
+      ],
+      "outputFileMapPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build/LoadableModelTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/LoadableModelTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/LoadableModelTests/LoadableModelTests.swift"
+      ],
+      "tempsPath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build",
+      "wholeModuleOptimization" : false
+    },
     "C.OrderedCollections-arm64-apple-macosx15.0-debug.module" : {
       "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
       "fileList" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/OrderedCollections.build/sources",
@@ -11837,6 +12186,10 @@
           "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/SwiftToolkitTests.swiftmodule"
         },
         {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules/LoadableModelTests.swiftmodule"
+        },
+        {
           "kind" : "virtual",
           "name" : "<TestingMacros-arm64-apple-macosx15.0-debug-tool.exe>"
         },
@@ -15219,6 +15572,158 @@
       "-driver-use-frontend-path",
       "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
     ],
+    "LoadableModel" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "LoadableModel",
+      "-package-name",
+      "swifttoolkit",
+      "-incremental",
+      "-c",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Helpers/CombineExtension.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Helpers/LoadableReachabilityService.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/DefaultCollectionModifier.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/DefaultCollectionProvider.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionModifier.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionProvider.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionStore.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadedCollectionStatus.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/DefaultElementProvider.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadableElementProvider.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadableElementStore.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadedElementStatus.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/LoadableModelType.swift",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/LoadableState.swift",
+      "-I",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-enable-batch-mode",
+      "-index-store-path",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-module-cache-path",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableModel-Swift.h",
+      "-swift-version",
+      "6",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "swifttoolkit",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "LoadableModelTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "LoadableModelTests",
+      "-package-name",
+      "swifttoolkit",
+      "-incremental",
+      "-c",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/LoadableModelTests/LoadableModelTests.swift",
+      "-I",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-enable-batch-mode",
+      "-index-store-path",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-Xcc",
+      "-fmodule-map-file=/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/_SwiftSyntaxCShims/include/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-syntax/Sources/_SwiftSyntaxCShims/include",
+      "-Xcc",
+      "-fmodule-map-file=/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-testing/Sources/_TestingInternals/include/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/checkouts/swift-testing/Sources/_TestingInternals/include",
+      "-module-cache-path",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "6",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "swifttoolkit",
+      "-Xfrontend",
+      "-load-plugin-executable",
+      "-Xfrontend",
+      "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/TestingMacros-tool#TestingMacros",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
     "OrderedCollections" : [
       "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
       "-module-name",
@@ -17574,6 +18079,49 @@
     "InternalCollectionsUtilities" : [
 
     ],
+    "LoadableModel" : [
+      "SwiftToolkit",
+      "AsyncAlgorithms",
+      "Collections",
+      "_RopeModule",
+      "OrderedCollections",
+      "HeapModule",
+      "HashTreeCollections",
+      "DequeModule",
+      "BitCollections",
+      "InternalCollectionsUtilities"
+    ],
+    "LoadableModelTests" : [
+      "Testing",
+      "TestingMacros",
+      "SwiftCompilerPlugin",
+      "SwiftCompilerPluginMessageHandling",
+      "SwiftSyntaxMacroExpansion",
+      "SwiftOperators",
+      "SwiftSyntaxMacros",
+      "SwiftSyntaxBuilder",
+      "SwiftParserDiagnostics",
+      "SwiftParser",
+      "SwiftBasicFormat",
+      "SwiftDiagnostics",
+      "SwiftSyntax",
+      "SwiftSyntax600",
+      "SwiftSyntax510",
+      "SwiftSyntax509",
+      "_SwiftSyntaxCShims",
+      "_TestingInternals",
+      "LoadableModel",
+      "SwiftToolkit",
+      "AsyncAlgorithms",
+      "Collections",
+      "_RopeModule",
+      "OrderedCollections",
+      "HeapModule",
+      "HashTreeCollections",
+      "DequeModule",
+      "BitCollections",
+      "InternalCollectionsUtilities"
+    ],
     "OrderedCollections" : [
       "InternalCollectionsUtilities"
     ],
@@ -17785,6 +18333,8 @@
       "InternalCollectionsUtilities"
     ],
     "SwiftToolkitPackageTests" : [
+      "LoadableModelTests",
+      "LoadableModel",
       "SwiftToolkitTests",
       "Testing",
       "TestingMacros",
@@ -18982,6 +19532,86 @@
         }
       ],
       "outputFilePath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/InternalCollectionsUtilities.build/sources"
+    },
+    "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Helpers/CombineExtension.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Helpers/LoadableReachabilityService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/DefaultCollectionModifier.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/DefaultCollectionProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionModifier.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadableCollectionStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Collection/LoadedCollectionStatus.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/DefaultElementProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadableElementProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadableElementStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/Loadable Element/LoadedElementStatus.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/LoadableModelType.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/LoadableModel/LoadableState.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/sources"
+    },
+    "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/LoadableModelTests/LoadableModelTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build/sources"
     },
     "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/OrderedCollections.build/sources" : {
       "alwaysOutOfDate" : false,
@@ -22341,6 +22971,66 @@
         {
           "kind" : "file",
           "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/InternalCollectionsUtilities.build/_UnsafeBitSet.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/CombineExtension.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultCollectionModifier.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultCollectionProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/DefaultElementProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionModifier.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableCollectionStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableElementProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableElementStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableModelType.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableReachabilityService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadableState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadedCollectionStatus.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModel.build/LoadedElementStatus.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/LoadableModelTests.build/LoadableModelTests.swift.o"
         },
         {
           "kind" : "file",
