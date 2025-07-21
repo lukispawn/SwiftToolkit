@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "SwiftToolkit",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v17),
         .macOS(.v15)
     ],
     products: [
@@ -14,6 +14,9 @@ let package = Package(
         .library(
             name: "SwiftToolkit",
             targets: ["SwiftToolkit"]),
+        .library(
+            name: "LoadableModel",
+            targets: ["LoadableModel"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-async-algorithms.git", from: "0.1.0"),
@@ -28,10 +31,24 @@ let package = Package(
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
             ]
         ),
+        .target(
+            name: "LoadableModel",
+            dependencies: [
+                "SwiftToolkit",
+                .product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
+            ]
+        ),
         .testTarget(
             name: "SwiftToolkitTests",
             dependencies: [
                 "SwiftToolkit",
+                .product(name: "Testing", package: "swift-testing")
+            ]
+        ),
+        .testTarget(
+            name: "LoadableModelTests",
+            dependencies: [
+                "LoadableModel",
                 .product(name: "Testing", package: "swift-testing")
             ]
         )
