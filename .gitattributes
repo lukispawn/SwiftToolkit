@@ -1,0 +1,13 @@
+# Exclude .claude directory from GitHub language detection
+.claude/* linguist-documentation
+.claude/**/*.md linguist-documentation
+.claude/**/*.mdc linguist-documentation
+
+# Ensure Swift files are properly detected
+Sources/**/*.swift linguist-language=Swift
+Tests/**/*.swift linguist-language=Swift
+
+# Documentation files
+*.md linguist-documentation
+README.md linguist-documentation
+CLAUDE.md linguist-documentation
