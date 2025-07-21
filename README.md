@@ -38,7 +38,7 @@ Add SwiftToolkit to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/lukispawn/SwiftToolkit.git", from: "0.1.0")
+    .package(url: "https://github.com/lukispawn/SwiftToolkit.git", from: "1.0.0")
 ]
 ```
 
@@ -140,4 +140,4 @@ MIT License - see LICENSE file for details.
 
 ## Version
 
-Current version: 0.1.0
+Current version: 1.0.0
