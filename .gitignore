@@ -1,0 +1,75 @@
+# Swift Package Manager
+.build/
+Packages/
+Package.pins
+.swiftpm/
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.xcuserstate
+
+# Build artifacts
+*.o
+*.d
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager build artifacts
+/.build
+/Packages
+/*.xcodeproj
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Coverage reports
+*.profdata
+*.profraw
+
+# Swift Testing output
+.testing/
+
+# Package.resolved - comment out if you want to commit it
+# Package.resolved
