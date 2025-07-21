@@ -38,16 +38,17 @@ Add SwiftToolkit to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(path: "../Toolkit/SwiftToolkit")
+    .package(url: "https://github.com/lukispawn/SwiftToolkit.git", from: "0.1.0")
 ]
 ```
 
-Or reference by URL when published:
+Then add it to your target dependencies:
 
 ```swift
-dependencies: [
-    .package(url: "https://github.com/yourusername/SwiftToolkit.git", from: "0.1.0")
-]
+.target(
+    name: "YourTarget",
+    dependencies: ["SwiftToolkit"]
+)
 ```
 
 ## Usage Examples
