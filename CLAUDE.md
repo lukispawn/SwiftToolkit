@@ -53,3 +53,14 @@ Uses Swift Testing framework with `@Test` and `@Suite` attributes. Tests cover:
 - Performance characteristics (throttling, debouncing)
 
 Test files use temporary directories and UUID-based filenames to avoid conflicts.
+
+## AI Rules and Documentation
+
+# Option 1: Reference entire folders (simple, includes all content)
+# Gotap AI Rules - SwiftUI/MVVM Specialization
+@.claude/gotap-docs                       # All SwiftUI documentation and patterns
+@.claude/gotap-rules                      # SwiftUI development rules
+
+# Steipete's Agent Rules - General Development Excellence  
+@.claude/steipete-rules                   # All project-specific agent rules
+@.claude/steipete-docs                    # All comprehensive agent documentation
