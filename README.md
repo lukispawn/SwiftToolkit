@@ -121,55 +121,212 @@ await cancelBag.addCancellable(publisher.sink { _ in })
 await cancelBag.cancelAll()
 ```
 
-### LoadableModel - Single Element
+### LoadableModel - Complete Guide
+
+LoadableModel provides sophisticated state management for asynchronous data loading with automatic retry, caching, and SwiftUI integration.
+
+#### Basic Element Store
 ```swift
 import LoadableModel
 
-// Simple element store
-let userStore = LoadableElementStore(
-    operation: { try await apiClient.fetchUser(id: userId) },
-    initial: nil
+// User profile store with configuration
+let profileStore = LoadableElementStore(
+    operation: {
+        let service = try await apiConnect.requireAuthenticatedService()
+        return try await service.getProfile().user
+    },
+    initial: nil,
+    configuration: .init(
+        refreshInterval: 60 * 11,  // Auto-refresh every 11 minutes
+        debug: true,
+        prefix: "User profile"
+    )
 )
-
-// In SwiftUI View
-if userStore.data.isLoading() {
-    ProgressView()
-} else if let user = userStore.data.value {
-    UserDetailView(user: user)
-} else if userStore.data.isError() {
-    ErrorView(error: userStore.data.error!)
-}
-
-// Manual refresh
-try await userStore.refresh()
 ```
 
-### LoadableModel - Collection with Pagination
+#### SwiftUI Integration Pattern
 ```swift
-struct User: Identifiable, Codable {
-    let id: String
-    let name: String
+struct ProfileView: View {
+    @State private var store = LoadableElementStore<User>(...)
+    
+    var body: some View {
+        Group {
+            switch store.loadState {
+            case .notRequested, .loading:
+                ProgressView("Loading profile...")
+            case .loaded:
+                if let user = store.data.value {
+                    UserDetailView(user: user)
+                }
+            case .failed(let error):
+                VStack(spacing: 16) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                        .foregroundColor(.orange)
+                    
+                    Text("Error loading profile")
+                        .font(.headline)
+                    
+                    Text(error.localizedDescription)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.secondary)
+                    
+                    Button("Retry") {
+                        Task {
+                            try? await store.refresh(setting: .init(
+                                reason: "User retry", 
+                                debounce: false
+                            ))
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                }
+                .padding()
+            }
+        }
+        .task {
+            await store.onTask()  // Trigger initial load
+        }
+    }
 }
+```
 
-let usersStore = LoadableCollectionStore<User, String, UserQuery>(
-    operation: { query in
-        try await apiClient.fetchUsers(query: query)
+#### Collection Store with CRUD Operations
+```swift
+// Media assets collection with full CRUD support
+let mediasStore = LoadableCollectionStore<MediaAsset, String, String>(
+    operation: {
+        let service = try await apiConnect.requireAuthenticatedService()
+        let items = try await service.send(APIRequests.MediaAsset.list).value
+        return items.sorted(by: { $0.createdAt > $1.createdAt })
     },
     modifierService: DefaultCollectionModifier(
-        refreshItem: { id in try await apiClient.refreshUser(id) },
-        removeItem: { id in try await apiClient.deleteUser(id) }
+        refreshItem: { id in
+            let service = try await apiConnect.requireAuthenticatedService()
+            return try await service.send(APIRequests.MediaAsset.get(id: id)).value
+        },
+        removeItem: { id in
+            let service = try await apiConnect.requireAuthenticatedService()
+            try await service.send(APIRequests.MediaAsset.remove(id: id))
+        }
+    ),
+    initial: nil,
+    configuration: .init(
+        refreshInterval: 60 * 11,
+        debug: true,
+        prefix: "Media assets"
     )
 )
 
-// Load initial data
-try await usersStore.load()
+// Usage in SwiftUI
+List(mediasStore.data.value ?? []) { mediaAsset in
+    MediaAssetRow(mediaAsset: mediaAsset)
+        .swipeActions(edge: .trailing) {
+            Button("Delete", role: .destructive) {
+                Task {
+                    await mediasStore.removeItem(objectId: mediaAsset.id)
+                }
+            }
+            Button("Refresh") {
+                Task {
+                    await mediasStore.refreshItem(objectId: mediaAsset.id)
+                }
+            }
+        }
+}
+```
 
-// Load next page
-try await usersStore.loadCoursor(type: .next)
+#### Advanced Configuration Patterns
+```swift
+// Frequent updates configuration
+Configuration(
+    refreshInterval: 30,             // Refresh every 30 seconds
+    debounceReloadValue: 0.1,        // Fast debounce for real-time data
+    debug: true,
+    prefix: "LiveData"
+)
 
-// Modify individual items
-try await usersStore.refreshItem(objectId: user.id)
-try await usersStore.removeItem(objectId: user.id)
+// In-memory caching configuration
+Configuration(
+    refreshInterval: nil,            // No auto-refresh
+    inMemory: true,                  // Cache permanently in memory
+    debug: false
+)
+
+// High-frequency data configuration
+Configuration(
+    refreshInterval: 10,             // Very frequent updates
+    debounceReloadValue: 0.5,        // Standard debounce
+    debug: true,
+    prefix: "RealTimeFeature"
+)
+```
+
+#### Dynamic Source Updates
+```swift
+// Change data source dynamically
+try await store.updateSource(operation: {
+    try await newApiService.fetchData()
+})
+
+// Switch to constant value (useful for testing)
+try await store.updateSource(constant: mockData)
+
+// Switch to custom provider
+try await store.updateSource(source: customDataProvider)
+```
+
+#### Error Handling Best Practices
+```swift
+// Safe refresh with error handling
+private func safeRefresh(_ reason: String) async {
+    do {
+        try await store.refresh(setting: .init(
+            reason: reason, 
+            debounce: false,
+            resetLast: true
+        ))
+    } catch {
+        logger.error("Failed to refresh \(reason): \(error)")
+        // Handle error appropriately
+    }
+}
+
+// Handle authentication errors gracefully
+let profileStore = LoadableElementStore<User?>(
+    operation: {
+        do {
+            let service = try await apiConnect.requireAuthenticatedService()
+            return try await service.getProfile().user
+        } catch APIClientError.authenticationError(.missingAuthenticationData) {
+            return nil  // Handle missing auth gracefully
+        }
+    },
+    configuration: .init(debug: true, prefix: "Profile")
+)
+```
+
+#### Reactive Updates
+```swift
+// React to authentication state changes
+private func handleAccountChange() async {
+    try? await profileStore.refresh(setting: .init(
+        reason: "Account change", 
+        debounce: false
+    ))
+    try? await mediasStore.refresh(setting: .init(
+        reason: "Account change", 
+        debounce: false
+    ))
+}
+
+// React to data changes from other sources
+private func handleUploadComplete() async {
+    try? await mediasStore.refresh(setting: .init(
+        reason: "Upload completed", 
+        debounce: true  // Use debouncing for batch operations
+    ))
+}
 ```
 
 ## Architecture
