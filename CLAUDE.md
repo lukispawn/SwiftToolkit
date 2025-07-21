@@ -56,7 +56,7 @@ Test files use temporary directories and UUID-based filenames to avoid conflicts
 
 ## AI Rules and Documentation
 
-# Option 1: Reference entire folders (simple, includes all content)
+
 # Gotap AI Rules - SwiftUI/MVVM Specialization
 @.claude/gotap-docs                       # All SwiftUI documentation and patterns
 @.claude/gotap-rules                      # SwiftUI development rules
