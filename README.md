@@ -359,26 +359,65 @@ let profileStore = LoadableElementStore<User?>(
 )
 ```
 
-#### Reactive Updates
+#### Observable and Reactive Patterns
 ```swift
-// React to authentication state changes
-private func handleAccountChange() async {
+// LoadableModel stores are @Observable - automatically update SwiftUI
+@Observable
+class MediaViewModel {
+    let mediasStore: LoadableCollectionStore<MediaAsset, String, String>
+    
+    // Computed properties automatically trigger UI updates
+    var isLoading: Bool { 
+        mediasStore.loadState.isLoading() 
+    }
+    
+    var mediaCount: Int { 
+        mediasStore.data.value?.count ?? 0 
+    }
+    
+    var hasError: Bool { 
+        mediasStore.loadState.isError() 
+    }
+}
+
+// SwiftUI automatically reacts to store changes
+struct MediaListView: View {
+    @State private var viewModel = MediaViewModel()
+    
+    var body: some View {
+        NavigationStack {
+            List(viewModel.mediasStore.data.value ?? []) { media in
+                MediaRow(media: media)
+            }
+            .navigationTitle("Media (\(viewModel.mediaCount))")
+            .overlay {
+                if viewModel.isLoading {
+                    ProgressView()
+                }
+            }
+        }
+    }
+}
+
+// Event-driven updates from external sources
+func handleAuthenticationChange() async {
+    // Stores automatically reflect new data when refreshed
     try? await profileStore.refresh(setting: .init(
-        reason: "Account change", 
-        debounce: false
-    ))
-    try? await mediasStore.refresh(setting: .init(
-        reason: "Account change", 
+        reason: "Authentication changed", 
         debounce: false
     ))
 }
 
-// React to data changes from other sources
-private func handleUploadComplete() async {
-    try? await mediasStore.refresh(setting: .init(
-        reason: "Upload completed", 
-        debounce: true  // Use debouncing for batch operations
-    ))
+// Observe store events (advanced)
+Task {
+    for await event in await store.eventsSequence() {
+        switch event {
+        case .didFetch(let items):
+            print("Fetched \(items.count) items")
+        case .didUpdateState(let status):
+            print("State changed to: \(status)")
+        }
+    }
 }
 ```
 
