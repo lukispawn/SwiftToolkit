@@ -2,34 +2,43 @@
 
 A comprehensive collection of Swift utilities for modern app development. SwiftToolkit provides foundational components and advanced state management solutions designed to be shared across multiple Swift projects.
 
+## Quick Navigation
+
+🚀 **[LoadableModel - State Management Framework](#loadablemodel---complete-guide)** - Advanced async data loading with SwiftUI integration  
+📦 **[Core Utilities](#core-utilities)** - Async, storage, logging, and concurrency tools  
+⚡ **[Installation](#installation)** - Swift Package Manager setup  
+🏗️ **[Architecture](#architecture)** - Project structure and design patterns  
+
 ## Features
 
-### 🔄 Async/Concurrency
-- **AsyncLock**: Actor-based lock ensuring only one async operation runs at a time
-- **AsyncThrottler**: Key-based throttling for async operations with configurable intervals
-- **DebounceAsync**: Debouncing for async operations with cancellation support
-- **AsyncChannel Extensions**: Convert between AsyncChannel and AsyncStream
-
-### ❌ Cancellation Management
-- **AsyncCancelBag**: Actor-based container for managing Tasks and Combine cancellables
-- **CombineCancelBag**: Combine-specific cancellation management
-
-### 💾 Storage & Files
-- **StorageCodable**: JSON-based file storage for Codable types
-- **LocalFileURL**: Type-safe file URL handling with directory management
-
-### 🌊 Streams
-- **MulticastAsyncStream**: Broadcasting async streams to multiple subscribers
-
-### 📝 Logging
-- **LoggerWrapper**: Structured logging wrapper with prefixes
-
-### 📊 State Management (LoadableModel)
+### 📊 State Management (LoadableModel) ⭐
 - **LoadableElementStore**: Observable store for single data entities with loading states
 - **LoadableCollectionStore**: Collection management with pagination and CRUD operations
 - **LoadableState**: Unified loading state enum (notRequested, loading, loaded, failed)
 - **Smart Loading**: Debouncing, retry mechanisms, and background refresh
 - **SwiftUI Integration**: Native @Observable support for reactive UIs
+
+### Core Utilities
+
+#### 🔄 Async/Concurrency
+- **AsyncLock**: Actor-based lock ensuring only one async operation runs at a time
+- **AsyncThrottler**: Key-based throttling for async operations with configurable intervals
+- **DebounceAsync**: Debouncing for async operations with cancellation support
+- **AsyncChannel Extensions**: Convert between AsyncChannel and AsyncStream
+
+#### ❌ Cancellation Management
+- **AsyncCancelBag**: Actor-based container for managing Tasks and Combine cancellables
+- **CombineCancelBag**: Combine-specific cancellation management
+
+#### 💾 Storage & Files
+- **StorageCodable**: JSON-based file storage for Codable types
+- **LocalFileURL**: Type-safe file URL handling with directory management
+
+#### 🌊 Streams
+- **MulticastAsyncStream**: Broadcasting async streams to multiple subscribers
+
+#### 📝 Logging
+- **LoggerWrapper**: Structured logging wrapper with prefixes
 
 ## Requirements
 
@@ -63,65 +72,7 @@ Then add it to your target dependencies:
 
 ## Usage Examples
 
-### AsyncLock
-```swift
-import SwiftToolkit
-
-let lock = AsyncLock()
-
-Task {
-    await lock.withLock {
-        // Only one task can execute this block at a time
-        await someAsyncOperation()
-    }
-}
-```
-
-### AsyncThrottler
-```swift
-let throttler = AsyncThrottler()
-
-// This will throttle calls by key, allowing max one call per second
-await throttler.throttle(key: "api-call", interval: 1.0) {
-    await callAPI()
-}
-```
-
-### StorageCodable
-```swift
-struct UserSettings: Codable {
-    let theme: String
-    let notifications: Bool
-}
-
-let storage = StorageCodable<UserSettings>(
-    filename: "user-settings.json",
-    directory: .documentDirectory
-)
-
-// Save settings
-try await storage.save(UserSettings(theme: "dark", notifications: true))
-
-// Load settings
-let settings = try await storage.load()
-```
-
-### AsyncCancelBag
-```swift
-let cancelBag = AsyncCancelBag()
-
-// Add tasks that will be cancelled together
-await cancelBag.addTask {
-    // Long running task
-}
-
-await cancelBag.addCancellable(publisher.sink { _ in })
-
-// Cancel all tasks and subscriptions
-await cancelBag.cancelAll()
-```
-
-### LoadableModel - Complete Guide
+### LoadableModel - Complete Guide ⭐
 
 LoadableModel provides sophisticated state management for asynchronous data loading with automatic retry, caching, and SwiftUI integration.
 
@@ -190,6 +141,72 @@ struct ProfileView: View {
     }
 }
 ```
+
+**[📖 See complete LoadableModel guide below](#loadablemodel---detailed-examples)**
+
+---
+
+## Core Utilities Examples
+
+### AsyncLock
+```swift
+import SwiftToolkit
+
+let lock = AsyncLock()
+
+Task {
+    await lock.withLock {
+        // Only one task can execute this block at a time
+        await someAsyncOperation()
+    }
+}
+```
+
+### AsyncThrottler
+```swift
+let throttler = AsyncThrottler()
+
+// This will throttle calls by key, allowing max one call per second
+await throttler.throttle(key: "api-call", interval: 1.0) {
+    await callAPI()
+}
+```
+
+### StorageCodable
+```swift
+struct UserSettings: Codable {
+    let theme: String
+    let notifications: Bool
+}
+
+let storage = StorageCodable<UserSettings>(
+    filename: "user-settings.json",
+    directory: .documentDirectory
+)
+
+// Save settings
+try await storage.save(UserSettings(theme: "dark", notifications: true))
+
+// Load settings
+let settings = try await storage.load()
+```
+
+### AsyncCancelBag
+```swift
+let cancelBag = AsyncCancelBag()
+
+// Add tasks that will be cancelled together
+await cancelBag.addTask {
+    // Long running task
+}
+
+await cancelBag.addCancellable(publisher.sink { _ in })
+
+// Cancel all tasks and subscriptions
+await cancelBag.cancelAll()
+```
+
+### LoadableModel - Detailed Examples
 
 #### Collection Store with CRUD Operations
 ```swift
