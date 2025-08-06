@@ -34,8 +34,10 @@ A comprehensive collection of Swift utilities for modern app development. SwiftT
 - **StorageCodable**: JSON-based file storage for Codable types
 - **LocalFileURL**: Type-safe file URL handling with directory management
 
-#### 🌊 Streams
+#### 🌊 Streams & Publishers
 - **MulticastAsyncStream**: Broadcasting async streams to multiple subscribers
+- **AsyncSequencePublisher**: Bridge any AsyncSequence to Combine Publisher for SwiftUI integration
+- **Publisher Extensions**: Native `.onReceive()` support for MulticastAsyncStream
 
 #### 📝 Logging
 - **LoggerWrapper**: Structured logging wrapper with prefixes
@@ -204,6 +206,53 @@ await cancelBag.addCancellable(publisher.sink { _ in })
 
 // Cancel all tasks and subscriptions
 await cancelBag.cancelAll()
+```
+
+### AsyncSequencePublisher & SwiftUI Integration
+```swift
+import SwiftToolkit
+import Combine
+
+// Convert any AsyncSequence to Combine Publisher
+let asyncStream = AsyncStream<String> { continuation in
+    continuation.yield("Hello")
+    continuation.yield("World")
+    continuation.finish()
+}
+
+let publisher = Publishers.AsyncSequencePublisher(asyncStream)
+
+// Use with SwiftUI .onReceive()
+struct ContentView: View {
+    @State private var receivedValues: [String] = []
+    
+    var body: some View {
+        List(receivedValues, id: \.self) { value in
+            Text(value)
+        }
+        .onReceive(publisher) { value in
+            receivedValues.append(value)
+        }
+    }
+}
+
+// MulticastAsyncStream with native publisher support
+let multicastStream = MulticastAsyncStream<String>()
+
+struct LiveDataView: View {
+    @State private var latestValue = ""
+    
+    var body: some View {
+        Text("Latest: \(latestValue)")
+            .onReceive(multicastStream.publisher()) { value in
+                latestValue = value
+            }
+            .task {
+                // Send values from elsewhere in your app
+                await multicastStream.send("Real-time data")
+            }
+    }
+}
 ```
 
 ### LoadableModel - Detailed Examples
@@ -432,6 +481,7 @@ SwiftToolkit/
 ├── Storage/         # File and data persistence
 ├── Files/           # File system utilities
 ├── Streams/         # Async stream utilities
+├── Publishers/      # AsyncSequence to Combine Publisher bridges
 └── Logging/         # Logging abstractions
 
 LoadableModel/
@@ -464,4 +514,4 @@ MIT License - see LICENSE file for details.
 
 ## Version
 
-Current version: 1.1.0
+Current version: 1.3.0
