@@ -15,6 +15,26 @@ extension Publishers {
     /// Converts any AsyncSequence into a Combine Publisher for SwiftUI .onReceive() integration.
     /// Uses a simplified implementation that works with Swift 6 strict concurrency.
     ///
+    /// ## Thread Safety 
+    /// 
+    /// ✅ **Main Thread Delivery**: Values are automatically delivered on the main thread via @MainActor.
+    /// This makes it safe to use directly with SwiftUI without additional `.receive(on:)` operators:
+    ///
+    /// ```swift
+    /// // ✅ Safe: Values delivered on main thread automatically
+    /// view.onReceive(asyncStream.publisher()) { value in
+    ///     viewModel.updateUI(value)  // Safe UI update on main thread
+    /// }
+    /// 
+    /// // ✅ Also works: Additional receive(on:) is redundant but harmless
+    /// view.onReceive(
+    ///     asyncStream.publisher()
+    ///         .receive(on: DispatchQueue.main)  // Redundant but safe
+    /// ) { value in
+    ///     viewModel.updateUI(value)
+    /// }
+    /// ```
+    ///
     /// ## Usage
     /// 
     /// ### Basic AsyncSequence to Publisher:
@@ -26,6 +46,7 @@ extension Publishers {
     /// }
     /// 
     /// let publisher = Publishers.AsyncSequencePublisher(sequence)
+    ///     // No need for .receive(on: DispatchQueue.main) - delivered on main thread automatically
     /// 
     /// // Use with SwiftUI
     /// view.onReceive(publisher) { value in
@@ -38,6 +59,7 @@ extension Publishers {
     /// - ✅ **Thread Safe**: Works with Swift 6 strict concurrency
     /// - ✅ **Error Handling**: Graceful handling of AsyncSequence failures
     /// - ✅ **Cancellation Support**: Respects Combine cancellation lifecycle
+    /// - ✅ **Main Thread Delivery**: Values automatically delivered on main thread via @MainActor
     public struct AsyncSequencePublisher<S: AsyncSequence>: Publisher where S.Element: Sendable, S: Sendable {
         public typealias Output = S.Element
         public typealias Failure = Never
@@ -94,14 +116,14 @@ where S.Element == Subscriber.Input, Subscriber.Failure == Never, S.Element: Sen
         // Capture subscriber once to avoid repeated access
         guard let capturedSubscriber = subscriber else { return }
         
-        task = Task.detached { [sequenceProvider] in
+        task = Task { @MainActor [sequenceProvider] in
             do {
                 let sequence = await sequenceProvider()
                 
                 for try await element in sequence {
                     guard !Task.isCancelled else { break }
                     
-                    // Send to subscriber (subscriber handles its own thread safety)
+                    // Send to subscriber on main thread via @MainActor
                     _ = capturedSubscriber.receive(element)
                 }
                 
