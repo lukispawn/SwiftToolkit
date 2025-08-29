@@ -14,6 +14,6 @@
 
 // MARK: - Version
 public enum SwiftToolkit {
-    public static let version = "1.3.2"
+    public static let version = "1.3.3"
     public static let name = "SwiftToolkit"
 }

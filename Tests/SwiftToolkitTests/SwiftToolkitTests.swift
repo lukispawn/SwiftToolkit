@@ -8,7 +8,7 @@ struct SwiftToolkitTests {
     @Test("Package information is correct")
     func packageInfo() {
         #expect(SwiftToolkit.name == "SwiftToolkit")
-        #expect(SwiftToolkit.version == "1.3.2")
+        #expect(SwiftToolkit.version == "1.3.3")
     }
     
     @Test("AsyncLock ensures sequential access")
