@@ -63,7 +63,7 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
     private let eventsEmitter = MulticastAsyncStream<Event>()
 
     public func eventsSequence(
-    ) async ->  any AsyncSequence<Event, Never> {
+    ) async ->  AsyncStream<Event> {
         await eventsEmitter.subscribe()
     }
     

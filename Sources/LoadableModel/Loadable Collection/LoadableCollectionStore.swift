@@ -71,7 +71,7 @@ public class LoadableCollectionStore<
     private let eventsEmitter = MulticastAsyncStream<Event>()
     
     public func eventsSequence(
-    ) async ->  any AsyncSequence<Event, Never> {
+    ) async ->  AsyncStream<Event> {
         await eventsEmitter.subscribe()
     }
     public func eventsStream() async -> AsyncStream<Event>{

@@ -255,13 +255,13 @@ public final actor MulticastAsyncStream_v2<Event: Sendable>: Sendable {
         }
     }
     
-    public nonisolated func subscribe() async -> any AsyncSequence<Event, Never> {
+    public nonisolated func subscribe() async -> AsyncStream<Event> {
         return await createChannel()
     }
     
     public nonisolated func filteredStream(
         _ isIncluded: @Sendable @escaping (Event) -> Bool
-    ) async -> any AsyncSequence<Event, Never> {
+    ) async -> AsyncStream<Event> {
         return await createChannel().filter(isIncluded)
     }
     
