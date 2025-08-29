@@ -406,13 +406,17 @@ extension LoadableElementStore {
                 NotificationCenter.default.publisher(
                     for: UIApplication.willEnterForegroundNotification
                 ).sink(receiveValue: { [weak self] _ in
-                    self?.reload(reason: "Will Enter Foreground notification", debounce: true)
+                    Task {
+                        try? await self?.refresh(setting: .init(reason: "Will Enter Foreground notification", debounce: true, resetLast: false))
+                    }
                 }).store(in: refreshBag)
 
                 NotificationCenter.default.publisher(
                     for: UIApplication.significantTimeChangeNotification
                 ).sink(receiveValue: { [weak self] _ in
-                    self?.reload(reason: "Significant Time Change notification", debounce: true)
+                    Task {
+                        try? await self?.refresh(setting: .init(reason: "Significant Time Change notification", debounce: true, resetLast: false))
+                    }
                 }).store(in: refreshBag)
             }
         }
