@@ -28,6 +28,7 @@ DerivedData/
 
 # Swift Package Manager build artifacts
 /.build
+/.build-macos
 /Packages
 /*.xcodeproj
 
