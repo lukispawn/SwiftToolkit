@@ -20,7 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-async-algorithms.git", from: "0.1.0"),
-        .package(url: "https://github.com/apple/swift-testing.git", from: "0.10.0")
+        /*.package(url: "https://github.com/apple/swift-testing.git", from: "0.10.0")*/
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -42,14 +42,14 @@ let package = Package(
             name: "SwiftToolkitTests",
             dependencies: [
                 "SwiftToolkit",
-                .product(name: "Testing", package: "swift-testing")
+                /*.product(name: "Testing", package: "swift-testing")*/
             ]
         ),
         .testTarget(
             name: "LoadableModelTests",
             dependencies: [
                 "LoadableModel",
-                .product(name: "Testing", package: "swift-testing")
+                /*.product(name: "Testing", package: "swift-testing")*/
             ]
         )
     ]
