@@ -9,9 +9,13 @@ import Foundation
 import os
 
 public struct LoggerWrapper: Sendable {
+    @usableFromInline
     let logger: Logger
+    @usableFromInline
     let prefix: String?
+    @usableFromInline
     let minLevel: Level
+    @usableFromInline
     let enabled: Bool
 
     public func osLogger()-> Logger {
@@ -52,6 +56,7 @@ public struct LoggerWrapper: Sendable {
             }
         }
 
+        @usableFromInline
         var osLevel: OSLogType {
             switch self {
             case .default:
@@ -68,23 +73,27 @@ public struct LoggerWrapper: Sendable {
         }
     }
 
-    func log(customLevel level: Level = .default, _ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
+    @_transparent
+    @usableFromInline
+    func log(customLevel level: Level = .default, _ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
         guard shouldLevelBeLogged(level) else { return }
-        log(level: level.osLevel, message, file: file, function: function, line: line)
+        log(level: level.osLevel, message, fileID: fileID, function: function, line: line)
     }
 
-    private func shouldLevelBeLogged(_ level: Level, message: String? = nil) -> Bool {
+    @usableFromInline
+    func shouldLevelBeLogged(_ level: Level, message: String? = nil) -> Bool {
         if level.rawValue >= minLevel.rawValue {
             return true
         }
         return false
     }
 
-    public func log(level: OSLogType = .default, _ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
+    @_transparent
+    public func log(level: OSLogType = .default, _ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
         guard enabled else { return }
 
         // Create location context for better debugging
-        let fileName = (file as NSString).lastPathComponent
+        let fileName = (String(describing: fileID) as NSString).lastPathComponent
         let location = "\(fileName):\(line)"
 
         if let prefix {
@@ -95,24 +104,29 @@ public struct LoggerWrapper: Sendable {
         }
     }
 
-    public func verbose(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        self.log(customLevel: .default, message, file: file, function: function, line: line)
+    @_transparent
+    public func verbose(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
+        self.log(customLevel: .default, message, fileID: fileID, function: function, line: line)
     }
 
-    public func debug(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        self.log(customLevel: .debug, message, file: file, function: function, line: line)
+    @_transparent
+    public func debug(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
+        self.log(customLevel: .debug, message, fileID: fileID, function: function, line: line)
     }
 
-    public func info(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        self.log(customLevel: .info, message, file: file, function: function, line: line)
+    @_transparent
+    public func info(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
+        self.log(customLevel: .info, message, fileID: fileID, function: function, line: line)
     }
 
-    public func warning(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        self.log(customLevel: .warning, message, file: file, function: function, line: line)
+    @_transparent
+    public func warning(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
+        self.log(customLevel: .warning, message, fileID: fileID, function: function, line: line)
     }
 
-    public func error(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        self.log(customLevel: .error, message, file: file, function: function, line: line)
+    @_transparent
+    public func error(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
+        self.log(customLevel: .error, message, fileID: fileID, function: function, line: line)
     }
 }
 
