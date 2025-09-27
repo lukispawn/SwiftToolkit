@@ -68,9 +68,9 @@ public struct LoggerWrapper: Sendable {
         }
     }
 
-    func log(customLevel level: Level = .default, _ message: String) {
+    func log(customLevel level: Level = .default, _ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
         guard shouldLevelBeLogged(level) else { return }
-        log(level: level.osLevel, message)
+        log(level: level.osLevel, message, file: file, function: function, line: line)
     }
 
     private func shouldLevelBeLogged(_ level: Level, message: String? = nil) -> Bool {
@@ -80,33 +80,39 @@ public struct LoggerWrapper: Sendable {
         return false
     }
 
-    public func log(level: OSLogType = .default, _ message: String) {
+    public func log(level: OSLogType = .default, _ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
         guard enabled else { return }
+
+        // Create location context for better debugging
+        let fileName = (file as NSString).lastPathComponent
+        let location = "\(fileName):\(line)"
+
         if let prefix {
-            logger.log(level: level, "\(prefix) \(message)")
+            // Include source location in structured format for OSLog
+            logger.log(level: level, "\(prefix) \(message) [\(location)]")
         } else {
-            logger.log(level: level, "\(message)")
+            logger.log(level: level, "\(message) [\(location)]")
         }
     }
 
-    public func verbose(_ message: String) {
-        self.log(customLevel: .default, message)
+    public func verbose(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        self.log(customLevel: .default, message, file: file, function: function, line: line)
     }
 
-    public func debug(_ message: String) {
-        self.log(customLevel: .debug, message)
+    public func debug(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        self.log(customLevel: .debug, message, file: file, function: function, line: line)
     }
 
-    public func info(_ message: String) {
-        self.log(customLevel: .info, message)
+    public func info(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        self.log(customLevel: .info, message, file: file, function: function, line: line)
     }
 
-    public func warning(_ message: String) {
-        self.log(customLevel: .warning, message)
+    public func warning(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        self.log(customLevel: .warning, message, file: file, function: function, line: line)
     }
 
-    public func error(_ message: String) {
-        self.log(customLevel: .error, message)
+    public func error(_ message: String, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        self.log(customLevel: .error, message, file: file, function: function, line: line)
     }
 }
 
