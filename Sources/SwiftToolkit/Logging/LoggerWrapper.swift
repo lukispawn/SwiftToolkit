@@ -74,22 +74,13 @@ public struct LoggerWrapper: Sendable {
     }
 
     @_transparent
-    @usableFromInline
-    func log(customLevel level: Level = .default, _ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
+    public func log(_ level: Level = .default, _ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
         guard shouldLevelBeLogged(level) else { return }
-        log(level: level.osLevel, message, fileID: fileID, function: function, line: line)
+        log(osLevel: level.osLevel, message, fileID: fileID, function: function, line: line)
     }
-
-    @usableFromInline
-    func shouldLevelBeLogged(_ level: Level, message: String? = nil) -> Bool {
-        if level.rawValue >= minLevel.rawValue {
-            return true
-        }
-        return false
-    }
-
+    
     @_transparent
-    public func log(level: OSLogType = .default, _ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
+    public func log(osLevel: OSLogType , _ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
         guard enabled else { return }
 
         // Create location context for better debugging
@@ -98,35 +89,44 @@ public struct LoggerWrapper: Sendable {
 
         if let prefix {
             // Include source location in structured format for OSLog
-            logger.log(level: level, "\(prefix) \(message) [\(location)]")
+            logger.log(level: osLevel, "\(prefix) \(message) [\(location)]")
         } else {
-            logger.log(level: level, "\(message) [\(location)]")
+            logger.log(level: osLevel, "\(message) [\(location)]")
         }
     }
 
+    
+    @usableFromInline
+    func shouldLevelBeLogged(_ level: Level, message: String? = nil) -> Bool {
+        if level.rawValue >= minLevel.rawValue {
+            return true
+        }
+        return false
+    }
+    
     @_transparent
     public func verbose(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
-        self.log(customLevel: .default, message, fileID: fileID, function: function, line: line)
+        self.log(.default, message, fileID: fileID, function: function, line: line)
     }
 
     @_transparent
     public func debug(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
-        self.log(customLevel: .debug, message, fileID: fileID, function: function, line: line)
+        self.log(.debug, message, fileID: fileID, function: function, line: line)
     }
 
     @_transparent
     public func info(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
-        self.log(customLevel: .info, message, fileID: fileID, function: function, line: line)
+        self.log(.info, message, fileID: fileID, function: function, line: line)
     }
 
     @_transparent
     public func warning(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
-        self.log(customLevel: .warning, message, fileID: fileID, function: function, line: line)
+        self.log(.warning, message, fileID: fileID, function: function, line: line)
     }
 
     @_transparent
     public func error(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
-        self.log(customLevel: .error, message, fileID: fileID, function: function, line: line)
+        self.log(.error, message, fileID: fileID, function: function, line: line)
     }
 }
 
