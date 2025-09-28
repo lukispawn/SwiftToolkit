@@ -18,20 +18,25 @@ public struct LoggerWrapper: Sendable {
     @usableFromInline
     let enabled: Bool
 
-    public func osLogger()-> Logger {
+    @usableFromInline
+    let displayLocation: Bool
+
+    public func osLogger() -> Logger {
         return logger
     }
-    
+
     public init(
         logger: Logger,
         prefix: String?,
         minLevel: Level = .default,
-        enabled: Bool = true
+        enabled: Bool = true,
+        displayLocation: Bool = false
     ) {
         self.logger = logger
         self.prefix = prefix
         self.minLevel = minLevel
         self.enabled = enabled
+        self.displayLocation = displayLocation
     }
 
     public enum Level: Int, Sendable {
@@ -78,24 +83,33 @@ public struct LoggerWrapper: Sendable {
         guard shouldLevelBeLogged(level) else { return }
         log(osLevel: level.osLevel, message, fileID: fileID, function: function, line: line)
     }
-    
+
     @_transparent
-    public func log(osLevel: OSLogType , _ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
+    public func log(osLevel: OSLogType, _ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
         guard enabled else { return }
 
         // Create location context for better debugging
-        let fileName = (String(describing: fileID) as NSString).lastPathComponent
-        let location = "\(fileName):\(line)"
 
-        if let prefix {
-            // Include source location in structured format for OSLog
-            logger.log(level: osLevel, "\(prefix) \(message) [\(location)]")
+        if displayLocation {
+            let fileName = (String(describing: fileID) as NSString).lastPathComponent
+            let location = "\(fileName):\(line)"
+
+            if let prefix {
+                // Include source location in structured format for OSLog
+                logger.log(level: osLevel, "\(prefix) \(message) [\(location)]")
+            } else {
+                logger.log(level: osLevel, "\(message) [\(location)]")
+            }
         } else {
-            logger.log(level: osLevel, "\(message) [\(location)]")
+            if let prefix {
+                // Include source location in structured format for OSLog
+                logger.log(level: osLevel, "\(prefix) \(message)")
+            } else {
+                logger.log(level: osLevel, "\(message)")
+            }
         }
     }
 
-    
     @usableFromInline
     func shouldLevelBeLogged(_ level: Level, message: String? = nil) -> Bool {
         if level.rawValue >= minLevel.rawValue {
@@ -103,7 +117,7 @@ public struct LoggerWrapper: Sendable {
         }
         return false
     }
-    
+
     @_transparent
     public func verbose(_ message: String, fileID: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) {
         self.log(.default, message, fileID: fileID, function: function, line: line)
@@ -129,4 +143,3 @@ public struct LoggerWrapper: Sendable {
         self.log(.error, message, fileID: fileID, function: function, line: line)
     }
 }
-

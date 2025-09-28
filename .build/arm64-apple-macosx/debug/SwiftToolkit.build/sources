@@ -6,6 +6,8 @@
 /Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Cancellation/CombineCancelBag.swift
 /Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Files/LocalFileURL.swift
 /Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Logging/LoggerWrapper.swift
+/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Publishers/AsyncSequencePublisher.swift
 /Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Storage/StorageCodable.swift
+/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Streams/MulticastAsyncStream+Publishers.swift
 /Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Streams/MulticastAsyncStream.swift
 /Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/SwiftToolkit.swift

@@ -50,11 +50,23 @@
     "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LoggerWrapper~partial.swiftmodule",
     "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/LoggerWrapper.swiftdeps"
   },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Publishers/AsyncSequencePublisher.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncSequencePublisher.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncSequencePublisher.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncSequencePublisher~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/AsyncSequencePublisher.swiftdeps"
+  },
   "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Storage/StorageCodable.swift": {
     "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/StorageCodable.d",
     "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/StorageCodable.swift.o",
     "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/StorageCodable~partial.swiftmodule",
     "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/StorageCodable.swiftdeps"
+  },
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Streams/MulticastAsyncStream+Publishers.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream+Publishers.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream+Publishers.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream+Publishers~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream+Publishers.swiftdeps"
   },
   "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Sources/SwiftToolkit/Streams/MulticastAsyncStream.swift": {
     "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/MulticastAsyncStream.d",
