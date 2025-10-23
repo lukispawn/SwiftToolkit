@@ -14,6 +14,6 @@
 
 // MARK: - Version
 public enum SwiftToolkit {
-    public static let version = "1.4.0"  // Added CodableIndexedStore
+    public static let version = "1.5.0"  // Added EventStreamMultiplexer and structured logging
     public static let name = "SwiftToolkit"
 }
