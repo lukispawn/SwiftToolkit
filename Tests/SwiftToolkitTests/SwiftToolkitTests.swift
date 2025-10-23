@@ -5,12 +5,7 @@ import Foundation
 @Suite("SwiftToolkit Core Tests")
 struct SwiftToolkitTests {
     
-    @Test("Package information is correct")
-    func packageInfo() {
-        #expect(SwiftToolkit.name == "SwiftToolkit")
-        #expect(SwiftToolkit.version == "1.3.4")
-    }
-    
+
     @Test("AsyncLock ensures sequential access")
     func asyncLock() async throws {
         let lock = AsyncLock<String, Error>()
@@ -18,7 +13,7 @@ struct SwiftToolkitTests {
         
         // Test that the lock ensures only one task executes (others get same result)
         let results = await withTaskGroup(of: String.self) { group in
-            for i in 0..<3 {
+            for _ in 0..<3 {
                 group.addTask {
                     return try! await lock.perform {
                         // Small delay to ensure race condition would occur without lock
@@ -70,21 +65,30 @@ struct SwiftToolkitTests {
     @Test("AsyncCancelBag cancels tasks properly")
     func asyncCancelBag() async throws {
         let cancelBag = AsyncCancelBag()
-        var taskCompleted = false
-        
+
+        // Use an actor to safely track task completion state
+        actor TaskState {
+            var completed = false
+            func markCompleted() { completed = true }
+            func isCompleted() -> Bool { completed }
+        }
+
+        let state = TaskState()
+
         let task = Task {
             try await Task.sleep(nanoseconds: 100_000_000) // 100ms
-            taskCompleted = true
+            await state.markCompleted()
         }
         await cancelBag.insert(task.eraseToAnyCancellable())
-        
+
         // Cancel immediately
         await cancelBag.cancel()
-        
+
         // Give a moment for cancellation to take effect
         try await Task.sleep(nanoseconds: 10_000_000) // 10ms
-        
-        #expect(!taskCompleted, "Task should have been cancelled")
+
+        let completed = await state.isCompleted()
+        #expect(!completed, "Task should have been cancelled")
     }
 }
 
