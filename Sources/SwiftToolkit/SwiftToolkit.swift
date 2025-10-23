@@ -14,6 +14,6 @@
 
 // MARK: - Version
 public enum SwiftToolkit {
-    public static let version = "1.5.1"  // Fixed race conditions and enhanced EventStreamMultiplexer
+    public static let version = "1.5.2"  // Removed deprecated MulticastAsyncStreamTests
     public static let name = "SwiftToolkit"
 }
