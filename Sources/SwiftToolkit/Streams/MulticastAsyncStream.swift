@@ -166,9 +166,18 @@ public extension MulticastAsyncStream {
     
     /// Compact map events (transform and filter nil results)
     func compactMappedStream<T>(
-        _ transform: @Sendable @escaping (Event) -> T?
+        _ transform: @Sendable @escaping (Event) async -> T?
     ) -> AsyncCompactMapSequence<AsyncStream<Event>, T> {
         return createStream().compactMap(transform)
+    }
+    
+    /// Convenience overload for sync transforms.
+    func compactMappedStream<T>(
+        _ transform: @Sendable @escaping (Event) -> T?
+    ) -> AsyncCompactMapSequence<AsyncStream<Event>, T> {
+        return createStream().compactMap { event in
+            transform(event)
+        }
     }
     
     /// Merge with another event emitter of the same event type
@@ -195,102 +204,6 @@ public extension MulticastAsyncStream {
         return await AsyncAlgorithms.zip(emitter1.createStream(), emitter2.createStream())
     }
 }
-
-/*
-/// Enhanced MulticastAsyncStream powered by AsyncAlgorithms
-/// Provides advanced stream processing capabilities like throttling, debouncing, filtering, etc.
-/// Each subscriber gets their own channel - works like NotificationCenter
-public final actor MulticastAsyncStream_v2<Event: Sendable>: Sendable {
-    private var subscribers: [UUID: AsyncChannel<Event>] = [:]
-    private let logger: LoggerWrapper?
-    
-    public init(logger: LoggerWrapper? = nil) {
-        self.logger = logger
-        logger?.debug("Initialized")
-    }
-    
-    deinit {
-        logger?.debug("Deinitializing - finishing all subscribers")
-        for (_, channel) in subscribers {
-            channel.finish()
-        }
-        subscribers.removeAll()
-    }
-    
-    /// Send an event to all subscribers (non-blocking multicast)
-    public func send(_ event: Event) {
-        logger?.debug("Sending event to \(subscribers.count) subscribers")
-        
-        // Send to all subscribers without blocking
-        for (_, channel) in subscribers {
-            Task {
-                await channel.send(event)
-            }
-        }
-    }
-    
-    /// Send an event synchronously (fire-and-forget)
-    public nonisolated func sendSync(_ event: Event) {
-        Task { await send(event) }
-    }
-    
-    /// Create a new subscriber channel (each subscriber gets their own channel)
-    private func createChannel() -> AsyncChannel<Event> {
-        let id = UUID()
-        let channel = AsyncChannel<Event>()
-      
-        // Add subscriber in actor context
-        self.addSubscriber(id: id, channel: channel)
-        self.autoRemoveOnFinish(id: id, channel: channel)
-        
-        return channel
-    }
-
-    private func autoRemoveOnFinish(id: UUID, channel: AsyncChannel<Event>) {
-        Task {
-            for await _ in channel {
-                // Just draining until finished
-            }
-            removeSubscriber(id)
-        }
-    }
-    
-    public nonisolated func subscribe() async -> AsyncStream<Event> {
-        return await createChannel()
-    }
-    
-    public nonisolated func filteredStream(
-        _ isIncluded: @Sendable @escaping (Event) -> Bool
-    ) async -> AsyncStream<Event> {
-        return await createChannel().filter(isIncluded)
-    }
-    
-    /// Finish all subscribers (no more events will be sent)
-    public func finish() {
-        logger?.debug("Finishing all \(subscribers.count) subscribers")
-        for (_, channel) in subscribers {
-            channel.finish()
-        }
-        subscribers.removeAll()
-    }
-    
-    /// Get current subscriber count
-    public func subscriberCount() -> Int {
-        return subscribers.count
-    }
-    
-    // Helper method for adding subscriber
-    private func addSubscriber(id: UUID, channel: AsyncChannel<Event>) {
-        subscribers[id] = channel
-        logger?.debug("New subscriber created, total: \(subscribers.count)")
-    }
-
-    private func removeSubscriber(_ id: UUID) {
-        subscribers.removeValue(forKey: id)
-        logger?.debug("Subscriber removed, remaining: \(subscribers.count)")
-    }
-}
-*/
 
 
 

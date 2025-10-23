@@ -3,7 +3,7 @@
 /// This package provides foundational utilities for:
 /// - **Async/Concurrency**: Advanced async patterns like locks, throttling, and debouncing
 /// - **Cancellation Management**: Actor-based cancel bags for managing async tasks
-/// - **Storage**: Type-safe JSON file storage for Codable types
+/// - **Storage**: Type-safe JSON file storage and indexed persistence
 /// - **File Utilities**: Safe file URL handling with directory management
 /// - **Streams**: Multicast async streams for broadcasting events
 /// - **Logging**: Wrapper utilities for structured logging
@@ -14,6 +14,6 @@
 
 // MARK: - Version
 public enum SwiftToolkit {
-    public static let version = "1.3.4"
+    public static let version = "1.4.0"  // Added CodableIndexedStore
     public static let name = "SwiftToolkit"
 }
