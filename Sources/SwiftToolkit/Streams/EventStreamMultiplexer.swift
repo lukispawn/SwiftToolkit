@@ -1,6 +1,15 @@
 import Foundation
 import os
 
+// MARK: - UUID Extension for Logging
+
+extension UUID {
+    /// Short string representation (first 8 characters) for logging
+    var shortString: String {
+        String(uuidString.prefix(8))
+    }
+}
+
 /// Generic event stream multiplexer for multi-subscriber patterns
 /// Based on MockEventStreamManager architecture with consistent multi-subscriber support
 ///
@@ -64,7 +73,7 @@ public actor EventStreamMultiplexer<EventType: Sendable> {
         continuation: AsyncStream<EventType>.Continuation
     ) -> UUID {
         eventStreams[streamID] = continuation
-        logger.log(.debug, .structuredLog(action: "multiplexer", status: "stream-added", params: [("id", String(streamID.uuidString.prefix(8))), ("total", "\(eventStreams.count)")]))
+        logger.log(.debug, .structuredLog(action: "multiplexer", status: "stream-added", params: [("id", streamID.shortString), ("total", "\(eventStreams.count)")]))
         return streamID
     }
 
@@ -73,7 +82,7 @@ public actor EventStreamMultiplexer<EventType: Sendable> {
     /// - Parameter streamID: UUID of the stream to remove
     public func removeEventStream(streamID: UUID) {
         if eventStreams.removeValue(forKey: streamID) != nil {
-            logger.log(.debug, .structuredLog(action: "multiplexer", status: "stream-removed", params: [("id", String(streamID.uuidString.prefix(8))), ("remaining", "\(eventStreams.count)")]))
+            logger.log(.debug, .structuredLog(action: "multiplexer", status: "stream-removed", params: [("id", streamID.shortString), ("remaining", "\(eventStreams.count)")]))
         }
     }
 
@@ -88,6 +97,23 @@ public actor EventStreamMultiplexer<EventType: Sendable> {
         for (_, continuation) in eventStreams {
             continuation.yield(event)
         }
+    }
+
+    /// Emit an event synchronously (fire-and-forget)
+    ///
+    /// This is a convenience method for non-async contexts like SwiftUI button actions.
+    /// Use the async `emitEvent` method when possible.
+    ///
+    /// ## Example
+    /// ```swift
+    /// Button("Trigger Event") {
+    ///     multiplexer.emitEventSync(.buttonTapped)
+    /// }
+    /// ```
+    ///
+    /// - Parameter event: Event to broadcast to all subscribers
+    public nonisolated func emitEventSync(_ event: EventType) {
+        Task { await emitEvent(event) }
     }
 
     /// Cancel all event streams
@@ -160,7 +186,7 @@ extension EventStreamMultiplexer {
         }
 
         // Register continuation with multiplexer (completes before return)
-        let _ = addEventStream(streamID: streamID, continuation: continuation)
+        _ = addEventStream(streamID: streamID, continuation: continuation)
 
         return stream  // ✅ Stream is fully registered and ready to receive events
     }

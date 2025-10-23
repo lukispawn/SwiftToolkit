@@ -49,7 +49,7 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
     public private(set) var data: LoadedElementStatus<Model> {
         didSet {
             Task {
-                await eventsEmitter.send(.didUpdateState(data))
+                await eventsEmitter.emitEvent(.didUpdateState(data))
             }
             self.logger.info("[state] update state:\(data.debugStatus)")
         }
@@ -60,15 +60,15 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
         data.state
     }
 
-    private let eventsEmitter = MulticastAsyncStream<Event>()
+    private let eventsEmitter = EventStreamMultiplexer<Event>()
 
     public func eventsSequence(
     ) async ->  AsyncStream<Event> {
-        await eventsEmitter.subscribe()
+        await eventsEmitter.createEventStream()
     }
-    
+
     public func eventsStream() async -> AsyncStream<Event>{
-        await eventsEmitter.subscribe()
+        await eventsEmitter.createEventStream()
     }
 
     @ObservationIgnored
@@ -352,7 +352,7 @@ extension LoadableElementStore {
                 await MainActor.run {
                     data = .loaded(value)
                 }
-                await eventsEmitter.send(.didFetch(value))
+                await eventsEmitter.emitEvent(.didFetch(value))
 
                 return value
 

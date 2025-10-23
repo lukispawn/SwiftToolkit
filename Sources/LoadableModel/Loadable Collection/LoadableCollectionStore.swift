@@ -59,23 +59,23 @@ public class LoadableCollectionStore<
     public private(set) var data: LoadedCollectionStatus<[Model], Cursor, Query> {
         didSet {
             Task {
-                await eventsEmitter.send(.didUpdateState(data))
+                await eventsEmitter.emitEvent(.didUpdateState(data))
             }
             self.logger.info("[state] update state:\(data.debugStatus)")
         }
     }
-    
+
     @MainActor
     public var loadState: LoadableState { data.state }
 
-    private let eventsEmitter = MulticastAsyncStream<Event>()
-    
+    private let eventsEmitter = EventStreamMultiplexer<Event>()
+
     public func eventsSequence(
     ) async ->  AsyncStream<Event> {
-        await eventsEmitter.subscribe()
+        await eventsEmitter.createEventStream()
     }
     public func eventsStream() async -> AsyncStream<Event>{
-        await eventsEmitter.subscribe()
+        await eventsEmitter.createEventStream()
     }
     
     @ObservationIgnored
@@ -440,7 +440,7 @@ extension LoadableCollectionStore {
                     data = .loaded(info)
                 }
                
-                await eventsEmitter.send(.didFetch(value.data))
+                await eventsEmitter.emitEvent(.didFetch(value.data))
                 
                 return value.data
             } catch {
@@ -838,8 +838,8 @@ public extension LoadableCollectionStore {
         }
         var new = data.value ?? []
         new.insert(item, at: index)
-        
-        await eventsEmitter.send(.willAddItems([item]))
+
+        await eventsEmitter.emitEvent(.willAddItems([item]))
         await replaceAllItems(new)
     }
 
@@ -847,7 +847,7 @@ public extension LoadableCollectionStore {
     final func appendLocalItems(_ items: [Model]) async {
         let current = data.value ?? []
         let new = current + items
-        await eventsEmitter.send(.willAddItems(items))
+        await eventsEmitter.emitEvent(.willAddItems(items))
         await replaceAllItems(new)
     }
 }

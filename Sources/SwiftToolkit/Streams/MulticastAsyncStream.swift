@@ -10,6 +10,11 @@ import Foundation
 /// Improved MulticastAsyncStream with proper cleanup and no memory leaks
 /// Uses AsyncStream with continuation tracking for automatic cleanup
 /// Each subscriber gets their own stream - works like NotificationCenter
+///
+/// - Warning: This class is deprecated. Use `EventStreamMultiplexer` instead.
+/// `EventStreamMultiplexer` has simpler architecture, better performance, and more features.
+@available(*, deprecated, renamed: "EventStreamMultiplexer",
+           message: "Use EventStreamMultiplexer instead. MulticastAsyncStream will be removed in a future version. EventStreamMultiplexer has simpler architecture, better performance, and comprehensive AsyncAlgorithms integration.")
 public final actor MulticastAsyncStream<Event: Sendable>: Sendable {
 
     private struct StreamInfo {
@@ -57,22 +62,25 @@ public final actor MulticastAsyncStream<Event: Sendable>: Sendable {
     }
     
     /// Create a new subscriber stream (each subscriber gets their own stream)
+    ///
+    /// ✅ Pattern: makeStream() with registration BEFORE return
+    /// This eliminates race condition where stream is returned before continuation is registered
     private func createStream() -> AsyncStream<Event> {
         let id = UUID()
-        
-        return AsyncStream<Event> { continuation in
+        let (stream, continuation) = AsyncStream<Event>.makeStream()
+
+        // Setup cleanup when continuation is finished
+        continuation.onTermination = { [weak self] _ in
             Task { [weak self] in
-                await self?.addStream(id: id, continuation: continuation)
-                
-                // Setup cleanup when continuation is finished
-                continuation.onTermination = { [weak self] _ in
-                    Task { [weak self] in
-                        await self?.markStreamAsFinished(id: id)
-                        await self?.removeSubscriber(id: id)
-                    }
-                }
+                await self?.markStreamAsFinished(id: id)
+                await self?.removeSubscriber(id: id)
             }
         }
+
+        // Register continuation with multiplexer (completes before return)
+        addStream(id: id, continuation: continuation)
+
+        return stream  // ✅ Stream is fully registered and ready to receive events
     }
 
     /// Type-erased sequence access
