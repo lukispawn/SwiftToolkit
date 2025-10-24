@@ -6,6 +6,7 @@
     "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitPackageTests.build/runner.d",
     "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitPackageTests.build/runner.swift.o",
     "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitPackageTests.build/runner~partial.swiftmodule",
-    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitPackageTests.build/runner.swiftdeps"
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitPackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitPackageTests.build/runner.dia"
   }
 }

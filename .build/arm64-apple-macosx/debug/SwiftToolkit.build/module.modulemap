@@ -1,4 +1,0 @@
-module SwiftToolkit {
-    header "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkit.build/SwiftToolkit-Swift.h"
-    requires objc
-}

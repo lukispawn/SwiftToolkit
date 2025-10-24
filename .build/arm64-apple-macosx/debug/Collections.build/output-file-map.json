@@ -6,6 +6,7 @@
     "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Collections.build/Collections.d",
     "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Collections.build/Collections.swift.o",
     "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Collections.build/Collections~partial.swiftmodule",
-    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Collections.build/Collections.swiftdeps"
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Collections.build/Collections.swiftdeps",
+    "diagnostics": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/Collections.build/Collections.dia"
   }
 }

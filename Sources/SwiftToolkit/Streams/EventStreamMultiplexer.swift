@@ -98,6 +98,9 @@ public actor EventStreamMultiplexer<EventType: Sendable> {
             continuation.yield(event)
         }
     }
+    public func send(_ event: EventType){
+        emitEvent(event)
+    }
 
     /// Emit an event synchronously (fire-and-forget)
     ///

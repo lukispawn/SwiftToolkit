@@ -6,30 +6,35 @@
     "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncSequencePublisherTests.d",
     "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncSequencePublisherTests.swift.o",
     "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncSequencePublisherTests~partial.swiftmodule",
-    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncSequencePublisherTests.swiftdeps"
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncSequencePublisherTests.swiftdeps",
+    "diagnostics": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncSequencePublisherTests.dia"
   },
   "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/SwiftToolkitTests/AsyncUtilitiesTests.swift": {
     "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncUtilitiesTests.d",
     "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncUtilitiesTests.swift.o",
     "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncUtilitiesTests~partial.swiftmodule",
-    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncUtilitiesTests.swiftdeps"
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncUtilitiesTests.swiftdeps",
+    "diagnostics": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/AsyncUtilitiesTests.dia"
   },
-  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/SwiftToolkitTests/MulticastAsyncStreamTests.swift": {
-    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/MulticastAsyncStreamTests.d",
-    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/MulticastAsyncStreamTests.swift.o",
-    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/MulticastAsyncStreamTests~partial.swiftmodule",
-    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/MulticastAsyncStreamTests.swiftdeps"
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/SwiftToolkitTests/EventStreamMultiplexerTests.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/EventStreamMultiplexerTests.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/EventStreamMultiplexerTests.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/EventStreamMultiplexerTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/EventStreamMultiplexerTests.swiftdeps",
+    "diagnostics": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/EventStreamMultiplexerTests.dia"
   },
-  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/SwiftToolkitTests/SimpleTests.swift": {
-    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SimpleTests.d",
-    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SimpleTests.swift.o",
-    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SimpleTests~partial.swiftmodule",
-    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SimpleTests.swiftdeps"
+  "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/SwiftToolkitTests/Storage/CodableIndexedStoreTests.swift": {
+    "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/CodableIndexedStoreTests.d",
+    "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/CodableIndexedStoreTests.swift.o",
+    "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/CodableIndexedStoreTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/CodableIndexedStoreTests.swiftdeps",
+    "diagnostics": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/CodableIndexedStoreTests.dia"
   },
   "/Users/lukasz/Developer/Toolkit/SwiftToolkit/Tests/SwiftToolkitTests/SwiftToolkitTests.swift": {
     "dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests.d",
     "object": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests.swift.o",
     "swiftmodule": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests~partial.swiftmodule",
-    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests.swiftdeps"
+    "swift-dependencies": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests.swiftdeps",
+    "diagnostics": "/Users/lukasz/Developer/Toolkit/SwiftToolkit/.build/arm64-apple-macosx/debug/SwiftToolkitTests.build/SwiftToolkitTests.dia"
   }
 }
