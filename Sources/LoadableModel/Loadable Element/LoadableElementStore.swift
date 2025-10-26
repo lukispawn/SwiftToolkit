@@ -28,17 +28,20 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
         var debounceReloadValue: TimeInterval
         var debug: Bool
         var prefix: String?
+        var refreshTriggers: Set<RefreshTrigger>
 
         public init(
             refreshInterval: TimeInterval? = nil,
             debounceReloadValue: TimeInterval = 0.5,
             debug: Bool = false,
-            prefix: String? = nil
+            prefix: String? = nil,
+            refreshTriggers: Set<RefreshTrigger> = Set(RefreshTrigger.allCases)
         ) {
             self.refreshInterval = refreshInterval
             self.debounceReloadValue = debounceReloadValue
             self.debug = debug
             self.prefix = prefix
+            self.refreshTriggers = refreshTriggers
         }
     }
 
@@ -187,6 +190,11 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
             return
         }
         if self.data.isError() {
+            return
+        }
+
+        // Skip refresh if already loaded and refreshOnTask trigger is disabled
+        if self.data.isLoaded() && !configuration.refreshTriggers.contains(.refreshOnTask) {
             return
         }
 
@@ -383,41 +391,47 @@ extension LoadableElementStore {
 
 extension LoadableElementStore {
     private func observeRefresh() {
-        if let manager = LoadableReachabilityFactory.defaultManager {
-            manager.start()
-            manager.reachabilityChanged
-                .filter { $0 == .wifi || $0 == .cellular }
-                .removeDuplicates()
-                .sink(receiveValue: { [weak self] _ in
-                    guard let self else { return }
-                    Task { @MainActor in
-                        if self.data.isError() {
-                            try? await self.refresh(setting: .init(reason: "Reachability changed", debounce: true, resetLast: false))
+        if configuration.refreshTriggers.contains(.reachability) {
+            if let manager = LoadableReachabilityFactory.defaultManager {
+                manager.start()
+                manager.reachabilityChanged
+                    .filter { $0 == .wifi || $0 == .cellular }
+                    .removeDuplicates()
+                    .sink(receiveValue: { [weak self] _ in
+                        guard let self else { return }
+                        Task { @MainActor in
+                            if self.data.isError() {
+                                try? await self.refresh(setting: .init(reason: "Reachability changed", debounce: true, resetLast: false))
+                            }
                         }
-                    }
-                })
-                .store(in: refreshBag)
+                    })
+                    .store(in: refreshBag)
+            }
         }
 
         #if os(iOS)
 
         Task {
             await MainActor.run {
-                NotificationCenter.default.publisher(
-                    for: UIApplication.willEnterForegroundNotification
-                ).sink(receiveValue: { [weak self] _ in
-                    Task {
-                        try? await self?.refresh(setting: .init(reason: "Will Enter Foreground notification", debounce: true, resetLast: false))
-                    }
-                }).store(in: refreshBag)
+                if configuration.refreshTriggers.contains(.appForeground) {
+                    NotificationCenter.default.publisher(
+                        for: UIApplication.willEnterForegroundNotification
+                    ).sink(receiveValue: { [weak self] _ in
+                        Task {
+                            try? await self?.refresh(setting: .init(reason: "Will Enter Foreground notification", debounce: true, resetLast: false))
+                        }
+                    }).store(in: refreshBag)
+                }
 
-                NotificationCenter.default.publisher(
-                    for: UIApplication.significantTimeChangeNotification
-                ).sink(receiveValue: { [weak self] _ in
-                    Task {
-                        try? await self?.refresh(setting: .init(reason: "Significant Time Change notification", debounce: true, resetLast: false))
-                    }
-                }).store(in: refreshBag)
+                if configuration.refreshTriggers.contains(.significantTimeChange) {
+                    NotificationCenter.default.publisher(
+                        for: UIApplication.significantTimeChangeNotification
+                    ).sink(receiveValue: { [weak self] _ in
+                        Task {
+                            try? await self?.refresh(setting: .init(reason: "Significant Time Change notification", debounce: true, resetLast: false))
+                        }
+                    }).store(in: refreshBag)
+                }
             }
         }
 
@@ -425,6 +439,8 @@ extension LoadableElementStore {
     }
 
     private func observeTimer() {
+        guard configuration.refreshTriggers.contains(.timer) else { return }
+
         if let refreshInterval {
             let intervalDuration = Duration.seconds(refreshInterval)
             let timer = AsyncTimerSequence(interval: intervalDuration, clock: .continuous)

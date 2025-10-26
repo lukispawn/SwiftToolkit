@@ -33,19 +33,22 @@ public class LoadableCollectionStore<
         var itemRefreshThrottleInterval: TimeInterval
         var debug: Bool
         var prefix: String?
-        
+        var refreshTriggers: Set<RefreshTrigger>
+
         public init(
             refreshInterval: TimeInterval? = nil,
             debounceReloadValue: TimeInterval = 0.5,
             itemRefreshThrottleInterval: TimeInterval = 0.5,
             debug: Bool = false,
-            prefix: String? = nil
+            prefix: String? = nil,
+            refreshTriggers: Set<RefreshTrigger> = Set(RefreshTrigger.allCases)
         ) {
             self.refreshInterval = refreshInterval
             self.debounceReloadValue = debounceReloadValue
             self.itemRefreshThrottleInterval = itemRefreshThrottleInterval
             self.debug = debug
             self.prefix = prefix
+            self.refreshTriggers = refreshTriggers
         }
     }
     
@@ -186,7 +189,35 @@ public class LoadableCollectionStore<
             logger: logger
         )
     }
-    
+
+    public convenience init(
+        queryableOperation operation: @escaping ((Query?) async throws -> [Model]),
+        modifierService: (any LoadableCollectionModifier<Model>)? = nil,
+        initial: [Model]? = nil,
+        query: Query? = nil,
+        inMemory: Bool = false,
+        configuration: Configuration = .init(),
+        logger: LoggerWrapper? = nil
+    ) {
+        self.init(
+            dataProvider: DefaultCollectionProvider(
+                queryableOperation: operation,
+                configuration: .init(inMemory: inMemory)
+            ),
+            modifierService: modifierService,
+            data: {
+                if let initial {
+                    return .loaded(.init(value: initial, query: query))
+                } else {
+                    return .notRequested
+                }
+            }(),
+            query: query,
+            configuration: configuration,
+            logger: logger
+        )
+    }
+
     public init(
         dataProvider: any LoadableCollectionProvider<Model, Cursor, Query>,
         modifierService: (any LoadableCollectionModifier<Model>)? = nil,
@@ -228,17 +259,29 @@ public class LoadableCollectionStore<
         if await self.data.isLoading(), await self.data.query == lastSetQuery {
             return
         }
-        
+
+        // Skip refresh if already loaded and refreshOnTask trigger is disabled
+        if await self.data.isLoaded() , !configuration.refreshTriggers.contains(.refreshOnTask) {
+            return
+        }
+
         try? await refresh(query: lastSetQuery, setting: .init(reason: "onTask", debounce: false))
     }
 
     public final func onTask(query: Query, debounce: Bool) async throws {
         self.logger.info("[onTask] status: \(await data.debugStatus)")
-        
+
         if await self.data.isLoading(), await self.data.query == query {
             return
         }
-        
+
+        // Skip refresh if already loaded with same query and refreshOnTask trigger is disabled
+        let isLoaded = await self.data.isLoaded()
+        let currentQuery = await self.data.query
+        if isLoaded, currentQuery == query, !configuration.refreshTriggers.contains(.refreshOnTask) {
+            return
+        }
+
         try? await refresh(query: lastSetQuery, setting: .init(reason: "onTask(query:)", debounce: debounce))
     }
 
@@ -278,7 +321,62 @@ public class LoadableCollectionStore<
         self.dataProvider = dataProvider
         return try await self.refresh(setting: setting)
     }
-    
+
+    @MainActor
+    public final func updateSource(
+        operation: @escaping (() async throws -> [Model]),
+        query: Query? = nil,
+        inMemory: Bool = false,
+        setting: RefreshSettings = .init(debounce: false, resetLast: true)
+    ) async throws {
+        let provider = DefaultCollectionProvider<Model, Cursor, Query>(
+            operation: operation,
+            configuration: .init(inMemory: inMemory)
+        )
+        return try await updateSource(dataProvider: provider, query: query, setting: setting)
+    }
+
+    @MainActor
+    public final func updateSource(
+        queryableOperation operation: @escaping ((Query?) async throws -> [Model]),
+        query: Query? = nil,
+        inMemory: Bool = false,
+        setting: RefreshSettings = .init(debounce: false, resetLast: true)
+    ) async throws {
+        let provider = DefaultCollectionProvider<Model, Cursor, Query>(
+            queryableOperation: operation,
+            configuration: .init(inMemory: inMemory)
+        )
+        return try await updateSource(dataProvider: provider, query: query, setting: setting)
+    }
+
+    @MainActor
+    public final func updateSource(
+        constant value: [Model],
+        query: Query? = nil,
+        inMemory: Bool = false,
+        setting: RefreshSettings = .init(debounce: false, resetLast: true)
+    ) async throws {
+        let provider = DefaultCollectionProvider<Model, Cursor, Query>(
+            value: value,
+            configuration: .init(inMemory: inMemory)
+        )
+        return try await updateSource(dataProvider: provider, query: query, setting: setting)
+    }
+
+    @MainActor
+    public final func updateSource(
+        constant error: Error,
+        query: Query? = nil,
+        setting: RefreshSettings = .init(debounce: false, resetLast: true)
+    ) async throws {
+        let provider = DefaultCollectionProvider<Model, Cursor, Query>(
+            error: error,
+            configuration: .init(inMemory: false)
+        )
+        return try await updateSource(dataProvider: provider, query: query, setting: setting)
+    }
+
     public final func refresh(setting: RefreshSettings) async throws {
         try await refresh(query: lastSetQuery, setting: setting)
     }
@@ -710,42 +808,48 @@ public extension LoadableCollectionStore {
 
 extension LoadableCollectionStore {
     private func observeRefresh() {
-        if let manager = LoadableReachabilityFactory.defaultManager {
-            manager.start()
-            manager.reachabilityChanged
-                .filter { $0 == .wifi || $0 == .cellular }
-                .removeDuplicates()
-                .sink(receiveValue: { [weak self] _ in
-                    guard let self else { return }
-                    Task {
-                        if await self.data.isError() {
-                            try? await self.refresh(setting: .init(reason: "Reachability changed", debounce: true, resetLast: false))
+        if configuration.refreshTriggers.contains(.reachability) {
+            if let manager = LoadableReachabilityFactory.defaultManager {
+                manager.start()
+                manager.reachabilityChanged
+                    .filter { $0 == .wifi || $0 == .cellular }
+                    .removeDuplicates()
+                    .sink(receiveValue: { [weak self] _ in
+                        guard let self else { return }
+                        Task {
+                            if await self.data.isError() {
+                                try? await self.refresh(setting: .init(reason: "Reachability changed", debounce: true, resetLast: false))
+                            }
                         }
-                    }
 
-                })
-                .store(in: refreshBag)
+                    })
+                    .store(in: refreshBag)
+            }
         }
 
         #if os(iOS)
 
         Task {
             await MainActor.run {
-                NotificationCenter.default.publisher(
-                    for: UIApplication.willEnterForegroundNotification
-                ).sink(receiveValue: { [weak self] _ in
-                    Task {
-                        try? await self?.refresh(setting: .init(reason: "Will Enter Foreground notification", debounce: true, resetLast: false))
-                    }
-                }).store(in: refreshBag)
+                if configuration.refreshTriggers.contains(.appForeground) {
+                    NotificationCenter.default.publisher(
+                        for: UIApplication.willEnterForegroundNotification
+                    ).sink(receiveValue: { [weak self] _ in
+                        Task {
+                            try? await self?.refresh(setting: .init(reason: "Will Enter Foreground notification", debounce: true, resetLast: false))
+                        }
+                    }).store(in: refreshBag)
+                }
 
-                NotificationCenter.default.publisher(
-                    for: UIApplication.significantTimeChangeNotification
-                ).sink(receiveValue: { [weak self] _ in
-                    Task {
-                        try? await self?.refresh(setting: .init(reason: "Significant Time Change notification", debounce: true, resetLast: false))
-                    }
-                }).store(in: refreshBag)
+                if configuration.refreshTriggers.contains(.significantTimeChange) {
+                    NotificationCenter.default.publisher(
+                        for: UIApplication.significantTimeChangeNotification
+                    ).sink(receiveValue: { [weak self] _ in
+                        Task {
+                            try? await self?.refresh(setting: .init(reason: "Significant Time Change notification", debounce: true, resetLast: false))
+                        }
+                    }).store(in: refreshBag)
+                }
             }
         }
 
@@ -753,6 +857,8 @@ extension LoadableCollectionStore {
     }
     
     private func observeTimer() {
+        guard configuration.refreshTriggers.contains(.timer) else { return }
+
         if let refreshInterval {
             let intervalDuration = Duration.seconds(refreshInterval)
             let timer = AsyncTimerSequence(interval: intervalDuration, clock: .continuous)

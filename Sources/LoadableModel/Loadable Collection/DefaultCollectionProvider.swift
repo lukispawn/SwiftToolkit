@@ -23,6 +23,7 @@ public struct DefaultCollectionProvider<T:Identifiable & Sendable, C:Equatable &
     enum Source: @unchecked Sendable {
         case constant(Result<[T], Error>)
         case provider(() async throws -> [T])
+        case queryableProvider((Q?) async throws -> [T])
     }
     
     let source: Source
@@ -52,6 +53,11 @@ public struct DefaultCollectionProvider<T:Identifiable & Sendable, C:Equatable &
         self.source = .provider(provider)
         self.configuration = configuration
     }
+
+    init(queryableOperation provider: @escaping (Q?) async throws -> [T], configuration: Configuration = .init()) {
+        self.source = .queryableProvider(provider)
+        self.configuration = configuration
+    }
     
     public func willLoad(previous: LoadedCollectionStatus<[T], C, Q>, query: Q?) async -> RefreshDisposition<LoadableCollectionResult<T, C>> {
         if let previous = previous.loadedData, configuration.inMemory {
@@ -72,6 +78,9 @@ public struct DefaultCollectionProvider<T:Identifiable & Sendable, C:Equatable &
             }
         case .provider(let operation):
             let value = try await operation()
+            return .init(data: value, nextCursor: nil, previousCursor: nil, allCount: nil)
+        case .queryableProvider(let operation):
+            let value = try await operation(query)
             return .init(data: value, nextCursor: nil, previousCursor: nil, allCount: nil)
         }
     }
