@@ -438,7 +438,9 @@ public extension LoadableElementStore {
             }
         } else {
             self.logger.info("[reload] [debounce] reason: \(setting.reason) | switch to force reload")
-            _ = try? await self.reloadForce(setting: setting)
+            Task(priority: .userInitiated) {
+                _ = try? await self.reloadForce(setting: setting)
+            }
         }
     }
 }

@@ -582,13 +582,14 @@ public class LoadableCollectionStore<
             await MainActor.run {
                 data.setIsLoading(cursor: nil, query: query, resetLast: setting.resetLast)
             }
-            
             await debounceReload.schedule(after: debounceReloadValue) {
                 _ = try? await self.executeLoad(setting: setting, query: query)
             }
         } else {
             self.logger.info("[reload] [debounce] reason: \(setting.reason) | switch to force reload")
-            _ = try? await self.reloadForce(query: query, setting: setting)
+            Task(priority: .userInitiated) {
+                _ = try? await self.reloadForce(query: query, setting: setting)
+            }
         }
     }
     
