@@ -198,7 +198,7 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
             return
         }
 
-        try? await refresh(setting: .init(reason: "onTask", debounce: false))
+        try? await reload(setting: .init(reason: "onTask"))
     }
 
     public func cancel() async {
@@ -286,7 +286,14 @@ public extension LoadableElementStore {
         }
     }
 
-    private final func reloadForce(setting: RefreshSettings) async throws -> Model {
+    @discardableResult
+    final func reload(setting: ReloadSettings) async throws -> Model {
+        self.logger.info("[reload] reason: \(setting.reason)")
+        await debounceReload.cancel()
+        return try await reloadForce(setting: setting)
+    }
+
+    private final func reloadForce(setting: any LoadSettings) async throws -> Model {
         self.logger.info("[reload] [force]: \(setting.reason)")
         await debounceReload.cancel()
         return try await self.executeLoad(setting: setting)
@@ -319,7 +326,7 @@ public extension LoadableElementStore {
 
 extension LoadableElementStore {
     @discardableResult
-    private func executeLoad(setting: RefreshSettings) async throws -> Model {
+    private func executeLoad(setting: any LoadSettings) async throws -> Model {
         if case .provide(let providedResult) = await service.willLoad(previous: data) {
             await MainActor.run {
                 switch providedResult {

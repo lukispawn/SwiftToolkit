@@ -19,10 +19,15 @@ public enum RefreshDisposition<Model>: @unchecked Sendable {
     case proceed
 }
 
-public struct RefreshSettings: Sendable {
-    let reason: String
-    let debounce: Bool
-    let resetLast: Bool
+public protocol LoadSettings: Sendable {
+    var reason: String { get }
+    var resetLast: Bool { get }
+}
+
+public struct RefreshSettings: LoadSettings, Sendable {
+    public let reason: String
+    public let debounce: Bool
+    public let resetLast: Bool
 
     public init(
         reason: String = "Generic",
@@ -31,6 +36,19 @@ public struct RefreshSettings: Sendable {
     ) {
         self.reason = reason
         self.debounce = debounce
+        self.resetLast = resetLast
+    }
+}
+
+public struct ReloadSettings: LoadSettings, Sendable {
+    public let reason: String
+    public let resetLast: Bool
+
+    public init(
+        reason: String = "Generic",
+        resetLast: Bool = false
+    ) {
+        self.reason = reason
         self.resetLast = resetLast
     }
 }

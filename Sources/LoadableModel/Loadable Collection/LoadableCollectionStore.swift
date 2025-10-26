@@ -265,7 +265,7 @@ public class LoadableCollectionStore<
             return
         }
 
-        try? await refresh(query: lastSetQuery, setting: .init(reason: "onTask", debounce: false))
+        try? await reload(query: lastSetQuery, setting: .init(reason: "onTask"))
     }
 
     public final func onTask(query: Query, debounce: Bool) async throws {
@@ -282,7 +282,11 @@ public class LoadableCollectionStore<
             return
         }
 
-        try? await refresh(query: lastSetQuery, setting: .init(reason: "onTask(query:)", debounce: debounce))
+        if debounce {
+            try? await refresh(query: query, setting: .init(reason: "onTask(query:)", debounce: true))
+        } else {
+            try? await reload(query: query, setting: .init(reason: "onTask(query:)"))
+        }
     }
 
     public func cancel() async {
@@ -393,8 +397,20 @@ public class LoadableCollectionStore<
             }
         }
     }
-    
-    private final func reloadForce(query: Query?, setting: RefreshSettings) async throws -> [Model] {
+
+    @discardableResult
+    public final func reload(setting: ReloadSettings) async throws -> [Model] {
+        try await reload(query: lastSetQuery, setting: setting)
+    }
+
+    @discardableResult
+    public final func reload(query: Query?, setting: ReloadSettings) async throws -> [Model] {
+        self.logger.info("[reload] reason: \(setting.reason) query:\(query.debugDescription)")
+        await debounceReload.cancel()
+        return try await reloadForce(query: query, setting: setting)
+    }
+
+    private final func reloadForce(query: Query?, setting: any LoadSettings) async throws -> [Model] {
         self.logger.info("[reload] [force] reason: \(setting.reason) query:\(query.debugDescription)")
         self.lastSetQuery = query
         await debounceReload.cancel()
@@ -486,7 +502,7 @@ extension LoadableCollectionStore {
     // -------------
     @discardableResult
     private func executeLoad(
-        setting: RefreshSettings,
+        setting: any LoadSettings,
         query: Query?
     ) async throws -> [Model] {
         self.lastSetQuery = query
