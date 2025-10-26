@@ -18,6 +18,8 @@ import UIKit
 
 @Observable
 public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unchecked Sendable {
+    public typealias LoadedData = Model
+
     public enum Event: Sendable {
         case didFetch(Model)
         case didUpdateState(LoadedElementStatus<Model>)
@@ -230,12 +232,42 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
     /// Respects the `refreshOnTask` trigger setting - if disabled, won't refresh
     /// already-loaded data.
     ///
-    /// This method uses `reload()` internally, so it properly respects task cancellation
+    /// This method uses `load()` internally, so it properly respects task cancellation
     /// when the view disappears.
     ///
     /// - Note: Skips loading if already in loading or error state
     @MainActor
     public final func onTask() async {
+        await onTask(fireAndForget: nil)
+    }
+
+    /// Called when SwiftUI .task() modifier is triggered with optional fire-and-forget behavior.
+    ///
+    /// Automatically loads data if not already loaded or in error state.
+    /// Respects the `refreshOnTask` trigger setting - if disabled, won't refresh
+    /// already-loaded data.
+    ///
+    /// - Parameter fireAndForget: Optional refresh settings for fire-and-forget behavior. If nil (default),
+    ///                            uses `load()` which waits for completion and respects task cancellation.
+    ///                            If provided, uses `loadInBackground()` for fire-and-forget behavior
+    ///                            with optional debouncing.
+    ///
+    /// **Behavior:**
+    /// - `fireAndForget: nil` → Uses `load()` (waits, cancellable by SwiftUI .task)
+    /// - `fireAndForget: .init(...)` → Uses `loadInBackground()` (fire-and-forget, not cancellable)
+    ///
+    /// **Example:**
+    /// ```swift
+    /// // Standard: waits for completion, cancellable
+    /// .task { await store.onTask() }
+    ///
+    /// // Fire-and-forget with debounce
+    /// .task { await store.onTask(fireAndForget: .init(debounceSettings: .default)) }
+    /// ```
+    ///
+    /// - Note: Skips loading if already in loading or error state
+    @MainActor
+    public final func onTask(fireAndForget setting: RefreshSettings?) async {
         self.logger.info("[onTask] status: \(data.debugStatus)")
 
         if self.data.isLoading() {
@@ -250,7 +282,13 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
             return
         }
 
-        _ = try? await reload(setting: .init(reason: "onTask"))
+        if let setting = setting {
+            // Fire-and-forget with debounce
+            try? await loadInBackground(setting: setting)
+        } else {
+            // Wait for completion, cancellable
+            _ = try? await load(setting: ReloadSettings(reason: "onTask"))
+        }
     }
 
     /// Cancels all ongoing operations including loads, debounces, and observers.
@@ -290,7 +328,7 @@ public extension LoadableElementStore {
         setting: RefreshSettings = .init(debounce: false, resetLast: true)
     ) async throws {
         self.service = source
-        return try await self.refresh(setting: setting)
+        return try await self.loadInBackground(setting: setting)
     }
     
     /// Updates the data source to use a new operation and refreshes the data.
@@ -348,47 +386,59 @@ public extension LoadableElementStore {
     }
 }
 public extension LoadableElementStore {
-    
 
-    /// Triggers a fire-and-forget refresh operation.
+    /// Triggers a fire-and-forget load operation.
     ///
-    /// This method returns immediately without waiting for the refresh to complete.
-    /// The refresh operation runs in a detached Task that cannot be cancelled by
+    /// This method returns immediately without waiting for the load to complete.
+    /// The load operation runs in a detached Task that cannot be cancelled by
     /// the caller's task context.
     ///
     /// **Use this when:**
-    /// - You want to trigger a refresh but don't need to wait for the result
-    /// - The refresh is triggered by user action (pull-to-refresh, button tap)
+    /// - You want to trigger a load but don't need to wait for the result
+    /// - The load is triggered by automatic mechanisms (timer, app foreground, etc.)
     /// - You're in a context where blocking isn't acceptable
     ///
     /// **Example:**
     /// ```swift
-    /// Button("Refresh") {
-    ///     Task {
-    ///         try? await store.refresh(setting: .init(reason: "User tap"))
-    ///         // Returns immediately, doesn't wait for completion
-    ///     }
-    /// }
+    /// // No debounce - execute immediately
+    /// try await store.loadInBackground(
+    ///     setting: RefreshSettings(reason: "User action")
+    /// )
+    ///
+    /// // With default debounce from configuration
+    /// try await store.loadInBackground(
+    ///     setting: RefreshSettings(reason: "User action", debounce: true)
+    /// )
+    ///
+    /// // With custom debounce time
+    /// try await store.loadInBackground(
+    ///     setting: RefreshSettings(reason: "User action", debounceSettings: .custom(1.0))
+    /// )
     /// ```
     ///
-    /// - Parameter setting: Refresh settings including debounce option
-    /// - Note: Use `reload()` if you need to wait for completion or want proper cancellation
-    final func refresh(setting: RefreshSettings) async throws {
-        self.logger.info("[refresh] [\(setting.debounce ? "debounce" : "force")] reason: \(setting.reason)")
-
-        if setting.debounce {
-            await reloadDebounce(setting: setting)
+    /// - Parameter setting: Refresh settings (reason, debounce, resetLast)
+    /// - Note: Use `load()` if you need to wait for completion or want proper cancellation
+    func loadInBackground(
+        setting: RefreshSettings = .init(debounceSettings: .none)
+    ) async throws {
+        if setting.debounceSettings.isDebouced {
+            // Debounce needed - pass to reloadDebounce which handles .default and .custom
+            self.logger.info("[loadInBackground] [debounce] reason: \(setting.reason)")
+            await reloadDebounce(setting: setting, debounceInterval: setting.debounceSettings.customIterval ?? debounceReloadValue)
         } else {
+            // No debounce - execute immediately in background
+            self.logger.info("[loadInBackground] [immediate] reason: \(setting.reason)")
             await debounceReload.cancel()
             Task(priority: .userInitiated) {
-                _ = try? await reloadForce(setting: setting)
+                _ = try? await self.reloadForce(setting: setting)
             }
         }
     }
-
-    /// Triggers a reload operation and waits for completion.
+    
+  
+    /// Loads data and waits for completion.
     ///
-    /// This method waits for the reload to complete and returns the loaded data.
+    /// This method waits for the load to complete and returns the loaded data.
     /// The operation respects structured concurrency and can be cancelled when
     /// the caller's task is cancelled (e.g., SwiftUI .task modifier).
     ///
@@ -401,7 +451,7 @@ public extension LoadableElementStore {
     /// ```swift
     /// .task {
     ///     do {
-    ///         let data = try await store.reload(setting: .init(reason: "View appeared"))
+    ///         let data = try await store.load(setting: .init(reason: "View appeared"))
     ///         // `data` is available here, and this properly cancels if view disappears
     ///     } catch {
     ///         print("Failed to load: \(error)")
@@ -409,39 +459,66 @@ public extension LoadableElementStore {
     /// }
     /// ```
     ///
-    /// - Parameter setting: Reload settings (no debounce option)
+    /// - Parameter setting: Load settings (reason, resetLast)
     /// - Returns: The loaded data
     /// - Throws: Any error that occurred during loading
-    /// - Note: This method cannot be debounced - it always executes immediately
     @discardableResult
-    final func reload(setting: ReloadSettings) async throws -> Model {
-        self.logger.info("[reload] reason: \(setting.reason)")
+    func load(
+        setting: ReloadSettings = ReloadSettings()
+    ) async throws -> Model {
+        self.logger.info("[load] reason: \(setting.reason)")
         return try await reloadForce(setting: setting)
     }
 
+    
     private final func reloadForce(setting: any LoadSettings) async throws -> Model {
         self.logger.info("[reload] [force]: \(setting.reason)")
         await debounceReload.cancel()
         return try await self.executeLoad(setting: setting)
     }
 
-    private final func reloadDebounce(setting: RefreshSettings) async {
-        self.logger.info("[reload] [debounce] reason: \(setting.reason)")
-
+    private final func reloadDebounce(setting: RefreshSettings, debounceInterval: TimeInterval) async {
+        
+        self.logger.info("[reload] [debounce:\(setting.debounceSettings.debugDescription)] reason: \(setting.reason)")
         if await data.isNotRequested() == false {
             await loadBag.cancel()
             await MainActor.run {
                 data.setIsLoading(resetLast: setting.resetLast)
             }
-            await debounceReload.schedule(after: debounceReloadValue) {
+            await debounceReload.schedule(after: debounceInterval) {
                 _ = try? await self.executeLoad(setting: setting)
             }
         } else {
-            self.logger.info("[reload] [debounce] reason: \(setting.reason) | switch to force reload")
+            self.logger.info("[reload] [debounce:\(setting.debounceSettings.debugDescription)] reason: \(setting.reason) | switch to force reload")
             Task(priority: .userInitiated) {
                 _ = try? await self.reloadForce(setting: setting)
             }
         }
+        
+    }
+}
+
+public extension LoadableElementStore {
+    
+    /// Triggers a fire-and-forget refresh operation.
+    ///
+    /// - Parameter setting: Refresh settings including debounce option
+    /// - Note: Deprecated. Use `loadInBackground(setting:)` instead for clearer API.
+    @available(*, deprecated, renamed: "loadInBackground", message: "Use loadInBackground(setting:) instead. RefreshSettings remains the same.")
+    final func refresh(setting: RefreshSettings) async throws {
+        try await loadInBackground(setting: setting)
+    }
+
+    /// Triggers a reload operation and waits for completion.
+    ///
+    /// - Parameter setting: Reload settings (no debounce option)
+    /// - Returns: The loaded data
+    /// - Throws: Any error that occurred during loading
+    /// - Note: Deprecated. Use `load(setting:)` instead for clearer API.
+    @available(*, deprecated, renamed: "load", message: "Use load(setting:) for clearer API. ReloadSettings can be used directly as LoadSettings.")
+    @discardableResult
+    final func reload(setting: ReloadSettings) async throws -> Model {
+        return try await load(setting: setting)
     }
 }
 
@@ -541,7 +618,13 @@ extension LoadableElementStore {
                         guard let self else { return }
                         Task { @MainActor in
                             if self.data.isError() {
-                                try? await self.refresh(setting: .init(reason: "Reachability changed", debounce: true, resetLast: false))
+                                try? await self.loadInBackground(
+                                    setting: RefreshSettings(
+                                        reason: "Reachability changed",
+                                        debounceSettings: .default,
+                                        resetLast: false
+                                    )
+                                )
                             }
                         }
                     })
@@ -558,7 +641,13 @@ extension LoadableElementStore {
                         for: UIApplication.willEnterForegroundNotification
                     ).sink(receiveValue: { [weak self] _ in
                         Task {
-                            try? await self?.refresh(setting: .init(reason: "Will Enter Foreground notification", debounce: true, resetLast: false))
+                            try? await self?.loadInBackground(
+                                setting: RefreshSettings(
+                                    reason: "Will Enter Foreground notification",
+                                    debounceSettings: .default,
+                                    resetLast: false
+                                )
+                            )
                         }
                     }).store(in: refreshBag)
                 }
@@ -568,7 +657,13 @@ extension LoadableElementStore {
                         for: UIApplication.significantTimeChangeNotification
                     ).sink(receiveValue: { [weak self] _ in
                         Task {
-                            try? await self?.refresh(setting: .init(reason: "Significant Time Change notification", debounce: true, resetLast: false))
+                            try? await self?.loadInBackground(
+                                setting: RefreshSettings(
+                                    reason: "Significant Time Change notification",
+                                    debounceSettings: .default,
+                                    resetLast: false
+                                )
+                            )
                         }
                     }).store(in: refreshBag)
                 }
@@ -590,7 +685,13 @@ extension LoadableElementStore {
                     // ...
                     if !self.data.isLoading() {
                         Task {
-                            try? await self.refresh(setting: .init(reason: "Timer", debounce: true, resetLast: false))
+                            try? await self.loadInBackground(
+                                setting: RefreshSettings(
+                                    reason: "Timer",
+                                    debounceSettings: .default,
+                                    resetLast: false
+                                )
+                            )
                         }
                     }
                 }

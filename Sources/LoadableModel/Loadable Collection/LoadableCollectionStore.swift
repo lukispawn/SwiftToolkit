@@ -21,6 +21,9 @@ public class LoadableCollectionStore<
     Cursor: Equatable & Sendable,
     Query: Equatable & Sendable
 >: @unchecked Sendable, LoadableModelSupport where Model.ID: Sendable  {
+
+    public typealias LoadedData = [Model]
+
     public enum Event: Sendable {
         case didFetch([Model])
         case didUpdateState(LoadedCollectionStatus<[Model], Cursor, Query>)
@@ -325,53 +328,84 @@ public class LoadableCollectionStore<
     /// Respects the `refreshOnTask` trigger setting - if disabled, won't refresh
     /// already-loaded data.
     ///
-    /// This method uses `reload()` internally, so it properly respects task cancellation
+    /// This method uses `load()` internally, so it properly respects task cancellation
     /// when the view disappears.
     ///
     /// - Note: Skips loading if already loading with same query
     public final func onTask() async {
-        self.logger.info("[onTask] status: \(await data.debugStatus)")
-
-        if await self.data.isLoading(), await self.data.query == lastSetQuery {
-            return
-        }
-
-        // Skip refresh if already loaded and refreshOnTask trigger is disabled
-        if await self.data.isLoaded() , !configuration.refreshTriggers.contains(.refreshOnTask) {
-            return
-        }
-
-        _ = try? await reload(query: lastSetQuery, setting: .init(reason: "onTask"))
+        await onTask(query: nil, fireAndForget: nil)
     }
 
-    /// Called when SwiftUI .task() modifier is triggered with a specific query.
+    /// Called when SwiftUI .task() modifier is triggered with optional query and fire-and-forget behavior.
     ///
-    /// Automatically loads data with the specified query.
+    /// Automatically loads data with the specified query (or uses `lastSetQuery` if nil).
     /// Respects the `refreshOnTask` trigger setting - if disabled and already loaded
     /// with the same query, won't refresh.
     ///
     /// - Parameters:
-    ///   - query: The query to use for loading
-    ///   - debounce: If true, uses debounced refresh; if false, uses reload (cancellable)
-    public final func onTask(query: Query, debounce: Bool) async throws {
+    ///   - query: The query to use for loading. If nil, uses `lastSetQuery`.
+    ///   - fireAndForget: Optional refresh settings for fire-and-forget behavior. If nil (default),
+    ///                    uses `load()` which waits for completion and respects task cancellation.
+    ///                    If provided, uses `loadInBackground()` for fire-and-forget behavior
+    ///                    with optional debouncing.
+    ///
+    /// **Behavior:**
+    /// - `fireAndForget: nil` → Uses `load()` (waits, cancellable by SwiftUI .task)
+    /// - `fireAndForget: .init(...)` → Uses `loadInBackground()` (fire-and-forget, not cancellable)
+    ///
+    /// **Example:**
+    /// ```swift
+    /// // Standard: waits for completion, cancellable
+    /// .task { await store.onTask() }
+    /// .task(id: query) { await store.onTask(query: query) }
+    ///
+    /// // Fire-and-forget with debounce
+    /// .task(id: query) {
+    ///     await store.onTask(
+    ///         query: query,
+    ///         fireAndForget: .init(debounceSettings: .default)
+    ///     )
+    /// }
+    /// ```
+    ///
+    /// - Note: Skips loading if already loading with same query
+    public final func onTask(query: Query? = nil, fireAndForget setting: RefreshSettings?) async {
+        let effectiveQuery = query ?? lastSetQuery
+
         self.logger.info("[onTask] status: \(await data.debugStatus)")
 
-        if await self.data.isLoading(), await self.data.query == query {
+        if await self.data.isLoading(), await self.data.query == effectiveQuery {
             return
         }
 
         // Skip refresh if already loaded with same query and refreshOnTask trigger is disabled
         let isLoaded = await self.data.isLoaded()
         let currentQuery = await self.data.query
-        if isLoaded, currentQuery == query, !configuration.refreshTriggers.contains(.refreshOnTask) {
+        if isLoaded, currentQuery == effectiveQuery, !configuration.refreshTriggers.contains(.refreshOnTask) {
             return
         }
 
-        if debounce {
-            try? await refresh(query: query, setting: .init(reason: "onTask(query:)", debounce: true))
+        if let setting = setting {
+            // Fire-and-forget with debounce
+            try? await loadInBackground(query: effectiveQuery, setting: setting)
         } else {
-            _ = try? await reload(query: query, setting: .init(reason: "onTask(query:)"))
+            // Wait for completion, cancellable
+            _ = try? await load(query: effectiveQuery, setting: ReloadSettings(reason: "onTask"))
         }
+    }
+
+    /// Called when SwiftUI .task() modifier is triggered with a specific query.
+    ///
+    /// - Parameters:
+    ///   - query: The query to use for loading
+    ///   - debounce: If true, uses debounced fire-and-forget; if false, waits for completion (cancellable)
+    ///
+    /// - Note: Deprecated. Use `onTask(query:fireAndForget:)` instead. Pass `fireAndForget` with
+    ///         `debounceSettings` for fire-and-forget behavior, or `nil` for cancellable wait.
+    @available(*, deprecated, message: "Use onTask(query:fireAndForget:) instead. Pass fireAndForget with debounceSettings for fire-and-forget behavior, or nil for cancellable wait.")
+    public final func onTask(query: Query, debounce: Bool) async throws {
+        let setting: RefreshSettings? = debounce ? .init(debounceSettings: .default) : nil
+        await onTask(query: query, fireAndForget: setting)
     }
 
     /// Cancels all ongoing operations including loads, cursor loads, debounces, and observers.
@@ -411,7 +445,7 @@ public class LoadableCollectionStore<
         setting: RefreshSettings = .init(debounce: false, resetLast: true)
     ) async throws {
         self.dataProvider = dataProvider
-        return try await self.refresh(setting: setting)
+        return try await self.loadInBackground(setting: setting)
     }
 
     @MainActor
@@ -469,129 +503,7 @@ public class LoadableCollectionStore<
         return try await updateSource(dataProvider: provider, query: query, setting: setting)
     }
 
-    /// Triggers a fire-and-forget refresh operation using the last set query.
-    ///
-    /// See `refresh(query:setting:)` for detailed documentation.
-    ///
-    /// - Parameter setting: Refresh settings including debounce option
-    public final func refresh(setting: RefreshSettings) async throws {
-        try await refresh(query: lastSetQuery, setting: setting)
-    }
-
-    /// Triggers a fire-and-forget refresh operation with a specific query.
-    ///
-    /// This method returns immediately without waiting for the refresh to complete.
-    /// The refresh operation runs in a detached Task that cannot be cancelled by
-    /// the caller's task context.
-    ///
-    /// **Use this when:**
-    /// - You want to trigger a refresh but don't need to wait for the result
-    /// - The refresh is triggered by user action (pull-to-refresh, button tap)
-    /// - You're in a context where blocking isn't acceptable
-    ///
-    /// **Example:**
-    /// ```swift
-    /// Button("Refresh") {
-    ///     Task {
-    ///         let query = SearchQuery(text: "swift")
-    ///         try? await store.refresh(query: query, setting: .init(reason: "User tap"))
-    ///         // Returns immediately, doesn't wait for completion
-    ///     }
-    /// }
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - query: The query to use for fetching (nil for no query)
-    ///   - setting: Refresh settings including debounce option
-    /// - Note: Use `reload(query:setting:)` if you need to wait for completion or want proper cancellation
-    public final func refresh(query: Query?, setting: RefreshSettings) async throws {
-        self.logger.info("[refresh] [\(setting.debounce ? "debounce" : "force")] reason: \(setting.reason) state:\(await data.debugStatus)")
-
-        if setting.debounce {
-            await reloadDebounce(query: query, setting: setting)
-        } else {
-            await debounceReload.cancel()
-            Task(priority: .userInitiated) {
-                _ = try? await reloadForce(query: query, setting: setting)
-            }
-        }
-    }
-
-    /// Triggers a reload operation using the last set query and waits for completion.
-    ///
-    /// See `reload(query:setting:)` for detailed documentation.
-    ///
-    /// - Parameter setting: Reload settings (no debounce option)
-    /// - Returns: The loaded collection
-    /// - Throws: Any error that occurred during loading
-    @discardableResult
-    public final func reload(setting: ReloadSettings) async throws -> [Model] {
-        try await reload(query: lastSetQuery, setting: setting)
-    }
-
-    /// Triggers a reload operation with a specific query and waits for completion.
-    ///
-    /// This method waits for the reload to complete and returns the loaded collection.
-    /// The operation respects structured concurrency and can be cancelled when
-    /// the caller's task is cancelled (e.g., SwiftUI .task modifier).
-    ///
-    /// **Use this when:**
-    /// - You need the loaded data immediately after calling
-    /// - You want proper task cancellation (SwiftUI .task, Task cancellation)
-    /// - You're loading data as part of a larger sequential operation
-    ///
-    /// **Example:**
-    /// ```swift
-    /// .task(id: searchQuery) {
-    ///     do {
-    ///         let items = try await store.reload(
-    ///             query: searchQuery,
-    ///             setting: .init(reason: "Search query changed")
-    ///         )
-    ///         // `items` is available here, and properly cancels if query changes
-    ///     } catch {
-    ///         print("Failed to load: \(error)")
-    ///     }
-    /// }
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - query: The query to use for fetching (nil for no query)
-    ///   - setting: Reload settings (no debounce option)
-    /// - Returns: The loaded collection
-    /// - Throws: Any error that occurred during loading
-    /// - Note: This method cannot be debounced - it always executes immediately
-    @discardableResult
-    public final func reload(query: Query?, setting: ReloadSettings) async throws -> [Model] {
-        self.logger.info("[reload] reason: \(setting.reason) query:\(query.debugDescription)")
-        return try await reloadForce(query: query, setting: setting)
-    }
-
-    private final func reloadForce(query: Query?, setting: any LoadSettings) async throws -> [Model] {
-        self.logger.info("[reload] [force] reason: \(setting.reason) query:\(query.debugDescription)")
-        self.lastSetQuery = query
-        await debounceReload.cancel()
-        return try await self.executeLoad(setting: setting, query: query)
-    }
     
-    private final func reloadDebounce(query: Query?, setting: RefreshSettings) async {
-        self.logger.info("[reload] [debounce] reason: \(setting.reason) query:\(query.debugDescription)")
-        self.lastSetQuery = query
-        if await data.isNotRequested() == false {
-            await loadBag.cancel()
-            await MainActor.run {
-                data.setIsLoading(cursor: nil, query: query, resetLast: setting.resetLast)
-            }
-            await debounceReload.schedule(after: debounceReloadValue) {
-                _ = try? await self.executeLoad(setting: setting, query: query)
-            }
-        } else {
-            self.logger.info("[reload] [debounce] reason: \(setting.reason) | switch to force reload")
-            Task(priority: .userInitiated) {
-                _ = try? await self.reloadForce(query: query, setting: setting)
-            }
-        }
-    }
     
     // ----------------------------------------
     
@@ -683,6 +595,261 @@ public class LoadableCollectionStore<
         guard let candidate = cursorCandidate(type: type) else { return }
         guard validateCusorCandidate(candidate, type: type) else { return }
         try await executeLoadCursor(cursor: candidate, cursorType: type)
+    }
+}
+
+extension LoadableCollectionStore {
+    // MARK: - New Load API
+
+    /// Triggers a fire-and-forget load operation using the last set query.
+    ///
+    /// This method returns immediately without waiting for the load to complete.
+    /// See `loadInBackground(query:setting:)` for detailed documentation.
+    ///
+    /// - Parameter setting: Refresh settings including debounce strategy
+    public func loadInBackground(
+        setting: RefreshSettings = .init(debounceSettings: .none)
+    ) async throws {
+        try await loadInBackground(query: lastSetQuery, setting: setting)
+    }
+
+    /// Triggers a fire-and-forget load operation with a specific query.
+    ///
+    /// This method returns immediately without waiting for the load to complete.
+    /// The load operation runs in a background Task that cannot be cancelled by
+    /// the caller's task context.
+    ///
+    /// **Use this when:**
+    /// - You want to trigger a load but don't need to wait for the result
+    /// - The load is triggered by user action (pull-to-refresh, button tap)
+    /// - You're in a context where blocking isn't acceptable
+    /// - You want to batch rapid successive requests with debouncing
+    ///
+    /// **Debouncing behavior:**
+    /// Configure via `RefreshSettings.debounceSettings`:
+    /// - `.none`: Executes immediately, cancels any pending debounced loads
+    /// - `.default`: Uses the debounce interval from Configuration (default: 0.5s)
+    /// - `.custom(interval)`: Uses a custom debounce interval in seconds
+    ///
+    /// **Example:**
+    /// ```swift
+    /// Button("Refresh") {
+    ///     Task {
+    ///         let query = SearchQuery(text: "swift")
+    ///         try? await store.loadInBackground(
+    ///             query: query,
+    ///             setting: .init(
+    ///                 reason: "User tap",
+    ///                 debounceSettings: .default
+    ///             )
+    ///         )
+    ///         // Returns immediately, doesn't wait for completion
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - query: The query to use for fetching (nil for no query)
+    ///   - setting: Refresh settings including debounce strategy
+    /// - Note: Use `load(query:setting:)` if you need to wait for completion or want proper cancellation
+    public func loadInBackground(
+        query: Query?,
+        setting: RefreshSettings = .init(debounceSettings: .none)
+    ) async throws {
+        if setting.debounceSettings.isDebouced {
+            // Debounce needed - pass to reloadDebounce which handles .default and .custom
+            self.logger.info("[loadInBackground] [debounce] reason: \(setting.reason) query:\(query.debugDescription)")
+            await reloadDebounce(query: query, setting: setting, debounceInterval: setting.debounceSettings.customIterval ?? debounceReloadValue)
+        } else {
+            // No debounce - execute immediately
+            self.logger.info("[loadInBackground] [immediate] reason: \(setting.reason) query:\(query.debugDescription)")
+            await debounceReload.cancel()
+            Task(priority: .userInitiated) {
+                _ = try? await self.reloadForce(query: query, setting: setting)
+            }
+        }
+    }
+
+    /// Loads data using the last set query and waits for completion.
+    ///
+    /// See `load(query:setting:)` for detailed documentation.
+    ///
+    /// - Parameter setting: Load settings (reason, resetLast)
+    /// - Returns: The loaded collection
+    /// - Throws: Any error that occurred during loading
+    @discardableResult
+    public func load(
+        setting: ReloadSettings = ReloadSettings()
+    ) async throws -> [Model] {
+        try await load(query: lastSetQuery, setting: setting)
+    }
+
+    /// Loads data with a specific query and waits for completion.
+    ///
+    /// This method waits for the load to complete and returns the loaded collection.
+    /// The operation respects structured concurrency and can be cancelled when
+    /// the caller's task is cancelled (e.g., SwiftUI .task modifier).
+    ///
+    /// **Use this when:**
+    /// - You need the loaded data immediately after calling
+    /// - You want proper task cancellation (SwiftUI .task, Task cancellation)
+    /// - You're loading data as part of a larger sequential operation
+    ///
+    /// **Example:**
+    /// ```swift
+    /// .task(id: searchQuery) {
+    ///     do {
+    ///         let items = try await store.load(
+    ///             query: searchQuery,
+    ///             setting: .init(reason: "Search query changed")
+    ///         )
+    ///         // `items` is available here, and properly cancels if query changes
+    ///     } catch {
+    ///         print("Failed to load: \(error)")
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - query: The query to use for fetching (nil for no query)
+    ///   - setting: Load settings (reason, resetLast)
+    /// - Returns: The loaded collection
+    /// - Throws: Any error that occurred during loading
+    /// - Note: This method cannot be debounced - it always executes immediately
+    @discardableResult
+    public func load(
+        query: Query?,
+        setting: ReloadSettings = ReloadSettings()
+    ) async throws -> [Model] {
+        self.logger.info("[load] reason: \(setting.reason) query:\(query.debugDescription)")
+        return try await reloadForce(query: query, setting: setting)
+    }
+
+    
+
+    private final func reloadForce(query: Query?, setting: any LoadSettings) async throws -> [Model] {
+        self.logger.info("[reload] [force] reason: \(setting.reason) query:\(query.debugDescription)")
+        self.lastSetQuery = query
+        await debounceReload.cancel()
+        return try await self.executeLoad(setting: setting, query: query)
+    }
+    
+    private final func reloadDebounce(query: Query?, setting: RefreshSettings, debounceInterval: TimeInterval) async {
+        self.lastSetQuery = query
+        // Use default debounce from configuration
+        self.logger.info("[reload] [debounce:\(setting.debounceSettings.debugDescription)] reason: \(setting.reason) query:\(query.debugDescription)")
+        if await data.isNotRequested() == false {
+            await loadBag.cancel()
+            await MainActor.run {
+                data.setIsLoading(cursor: nil, query: query, resetLast: setting.resetLast)
+            }
+            await debounceReload.schedule(after: debounceInterval) {
+                _ = try? await self.executeLoad(setting: setting, query: query)
+            }
+        } else {
+            self.logger.info("[reload] [debounce:\(setting.debounceSettings.debugDescription)] reason: \(setting.reason) | switch to force reload")
+            Task(priority: .userInitiated) {
+                _ = try? await self.reloadForce(query: query, setting: setting)
+            }
+        }
+    }
+}
+
+extension LoadableCollectionStore {
+    // MARK: - Deprecated Refresh/Reload API
+
+    /// Triggers a fire-and-forget refresh operation using the last set query.
+    ///
+    /// See `refresh(query:setting:)` for detailed documentation.
+    ///
+    /// - Parameter setting: Refresh settings including debounce option
+    /// - Note: Deprecated. Use `loadInBackground(setting:)` instead. RefreshSettings remains the same.
+    @available(*, deprecated, renamed: "loadInBackground", message: "Use loadInBackground(setting:) instead. RefreshSettings remains the same.")
+    public final func refresh(setting: RefreshSettings) async throws {
+        try await loadInBackground(setting: setting)
+    }
+
+    /// Triggers a fire-and-forget refresh operation with a specific query.
+    ///
+    /// This method returns immediately without waiting for the refresh to complete.
+    /// The refresh operation runs in a detached Task that cannot be cancelled by
+    /// the caller's task context.
+    ///
+    /// **Use this when:**
+    /// - You want to trigger a refresh but don't need to wait for the result
+    /// - The refresh is triggered by user action (pull-to-refresh, button tap)
+    /// - You're in a context where blocking isn't acceptable
+    ///
+    /// **Example:**
+    /// ```swift
+    /// Button("Refresh") {
+    ///     Task {
+    ///         let query = SearchQuery(text: "swift")
+    ///         try? await store.refresh(query: query, setting: .init(reason: "User tap"))
+    ///         // Returns immediately, doesn't wait for completion
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - query: The query to use for fetching (nil for no query)
+    ///   - setting: Refresh settings including debounce option
+    /// - Note: Deprecated. Use `loadInBackground(query:setting:)` instead. RefreshSettings remains the same.
+    @available(*, deprecated, renamed: "loadInBackground", message: "Use loadInBackground(query:setting:) instead. RefreshSettings remains the same.")
+    public final func refresh(query: Query?, setting: RefreshSettings) async throws {
+        try await loadInBackground(query: query, setting: setting)
+    }
+
+    /// Triggers a reload operation using the last set query and waits for completion.
+    ///
+    /// See `reload(query:setting:)` for detailed documentation.
+    ///
+    /// - Parameter setting: Reload settings (no debounce option)
+    /// - Returns: The loaded collection
+    /// - Throws: Any error that occurred during loading
+    /// - Note: Deprecated. Use `load(setting:)` for clearer API.
+    @available(*, deprecated, renamed: "load", message: "Use load(setting:) for clearer API. LoadSettings matches the old ReloadSettings.")
+    @discardableResult
+    public final func reload(setting: ReloadSettings) async throws -> [Model] {
+        try await reload(query: lastSetQuery, setting: setting)
+    }
+
+    /// Triggers a reload operation with a specific query and waits for completion.
+    ///
+    /// This method waits for the reload to complete and returns the loaded collection.
+    /// The operation respects structured concurrency and can be cancelled when
+    /// the caller's task is cancelled (e.g., SwiftUI .task modifier).
+    ///
+    /// **Use this when:**
+    /// - You need the loaded data immediately after calling
+    /// - You want proper task cancellation (SwiftUI .task, Task cancellation)
+    /// - You're loading data as part of a larger sequential operation
+    ///
+    /// **Example:**
+    /// ```swift
+    /// .task(id: searchQuery) {
+    ///     do {
+    ///         let items = try await store.reload(
+    ///             query: searchQuery,
+    ///             setting: .init(reason: "Search query changed")
+    ///         )
+    ///         // `items` is available here, and properly cancels if query changes
+    ///     } catch {
+    ///         print("Failed to load: \(error)")
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - query: The query to use for fetching (nil for no query)
+    ///   - setting: Reload settings (no debounce option)
+    /// - Returns: The loaded collection
+    /// - Throws: Any error that occurred during loading
+    /// - Note: Deprecated. Use `load(query:setting:)` for clearer API.
+    @available(*, deprecated, renamed: "load", message: "Use load(query:setting:) for clearer API. LoadSettings matches the old ReloadSettings.")
+    @discardableResult
+    public final func reload(query: Query?, setting: ReloadSettings) async throws -> [Model] {
+        return try await load(query: query, setting: setting)
     }
 }
 
@@ -999,7 +1166,13 @@ public extension LoadableCollectionStore {
             } catch {
                 data = previous
                 Task {
-                    try? await refresh(setting: .init(reason: "Delete Object Request fail", debounce: true, resetLast: false))
+                    try? await loadInBackground(
+                        setting: RefreshSettings(
+                            reason: "Delete Object Request fail",
+                            debounceSettings: .default,
+                            resetLast: false
+                        )
+                    )
                 }
                 throw error
             }
@@ -1047,7 +1220,13 @@ extension LoadableCollectionStore {
                         guard let self else { return }
                         Task {
                             if await self.data.isError() {
-                                try? await self.refresh(setting: .init(reason: "Reachability changed", debounce: true, resetLast: false))
+                                try? await self.loadInBackground(
+                                    setting: RefreshSettings(
+                                        reason: "Reachability changed",
+                                        debounceSettings: .default,
+                                        resetLast: false
+                                    )
+                                )
                             }
                         }
 
@@ -1096,7 +1275,13 @@ extension LoadableCollectionStore {
                 for await _ in timer {
                     if !self.data.isLoading() {
                         Task {
-                            try? await self.refresh(setting: .init(reason: "Timer", debounce: true, resetLast: false))
+                            try? await self.loadInBackground(
+                                setting: RefreshSettings(
+                                    reason: "Timer",
+                                    debounceSettings: .default,
+                                    resetLast: false
+                                )
+                            )
                         }
                     }
                 }

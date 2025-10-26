@@ -5,6 +5,8 @@ import Testing
 
 @MainActor
 final class MockLoadableStore: LoadableModelSupport {
+    typealias LoadedData = String
+
     var loadState: LoadableState
 
     init(loadState: LoadableState) {
@@ -15,6 +17,16 @@ final class MockLoadableStore: LoadableModelSupport {
         // Mock implementation
     }
 
+    func loadInBackground(setting: RefreshSettings) async throws {
+        // Mock implementation
+    }
+
+    func load(setting: ReloadSettings) async throws -> String {
+        // Mock implementation
+        return "mock data"
+    }
+
+    @available(*, deprecated, renamed: "loadInBackground")
     func refresh(setting: RefreshSettings) async throws {
         // Mock implementation
     }
