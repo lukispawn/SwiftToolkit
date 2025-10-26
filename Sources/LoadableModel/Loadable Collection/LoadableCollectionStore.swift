@@ -73,10 +73,21 @@ public class LoadableCollectionStore<
 
     private let eventsEmitter = EventStreamMultiplexer<Event>()
 
+    /// Creates an async stream of store events.
+    ///
+    /// Events include data fetches, state updates, and item additions.
+    ///
+    /// - Returns: AsyncStream of Event instances
     public func eventsSequence(
     ) async ->  AsyncStream<Event> {
         await eventsEmitter.createEventStream()
     }
+
+    /// Creates an async stream of store events.
+    ///
+    /// Events include data fetches, state updates, and item additions.
+    ///
+    /// - Returns: AsyncStream of Event instances
     public func eventsStream() async -> AsyncStream<Event>{
         await eventsEmitter.createEventStream()
     }
@@ -127,6 +138,15 @@ public class LoadableCollectionStore<
     
     // --------------
 
+    /// Creates a store with a constant collection value that never changes.
+    ///
+    /// - Parameters:
+    ///   - value: The constant collection to store
+    ///   - modifierService: Optional service for item-level CRUD operations
+    ///   - query: Optional query associated with this collection
+    ///   - inMemory: If true, disables any persistence layer
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public convenience init(
         constant value: [Model],
         modifierService: (any LoadableCollectionModifier<Model>)? = nil,
@@ -145,6 +165,16 @@ public class LoadableCollectionStore<
         )
     }
     
+    /// Creates a store that always returns an error.
+    ///
+    /// Useful for testing error states or providing fallback error instances.
+    ///
+    /// - Parameters:
+    ///   - error: The error to return
+    ///   - query: Optional query associated with this collection
+    ///   - inMemory: If true, disables any persistence layer
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public convenience init(
         constant error: Error,
         query: Query? = nil,
@@ -162,6 +192,18 @@ public class LoadableCollectionStore<
         )
     }
     
+    /// Creates a store with an async operation to fetch the collection.
+    ///
+    /// The operation closure does not receive the query parameter.
+    ///
+    /// - Parameters:
+    ///   - operation: Async closure that fetches the collection
+    ///   - modifierService: Optional service for item-level CRUD operations
+    ///   - initial: Optional initial collection to display before first fetch
+    ///   - query: Optional query associated with this collection
+    ///   - inMemory: If true, disables any persistence layer
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public convenience init(
         operation: @escaping (() async throws -> [Model]),
         modifierService: (any LoadableCollectionModifier<Model>)? = nil,
@@ -190,6 +232,19 @@ public class LoadableCollectionStore<
         )
     }
 
+    /// Creates a store with a query-aware async operation.
+    ///
+    /// The operation closure receives the current query parameter, allowing
+    /// dynamic filtering or pagination based on the query.
+    ///
+    /// - Parameters:
+    ///   - operation: Async closure that receives Query? and fetches the collection
+    ///   - modifierService: Optional service for item-level CRUD operations
+    ///   - initial: Optional initial collection to display before first fetch
+    ///   - query: Optional initial query
+    ///   - inMemory: If true, disables any persistence layer
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public convenience init(
         queryableOperation operation: @escaping ((Query?) async throws -> [Model]),
         modifierService: (any LoadableCollectionModifier<Model>)? = nil,
@@ -218,6 +273,17 @@ public class LoadableCollectionStore<
         )
     }
 
+    /// Creates a store with a custom provider service.
+    ///
+    /// This is the designated initializer that allows full customization.
+    ///
+    /// - Parameters:
+    ///   - dataProvider: Custom provider conforming to LoadableCollectionProvider
+    ///   - modifierService: Optional service for item-level CRUD operations
+    ///   - data: Initial data state (defaults to .notRequested)
+    ///   - query: Optional initial query
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public init(
         dataProvider: any LoadableCollectionProvider<Model, Cursor, Query>,
         modifierService: (any LoadableCollectionModifier<Model>)? = nil,
@@ -253,6 +319,16 @@ public class LoadableCollectionStore<
 
     // --------------
 
+    /// Called when SwiftUI .task() modifier is triggered.
+    ///
+    /// Automatically loads data if not already loaded. Uses the last set query.
+    /// Respects the `refreshOnTask` trigger setting - if disabled, won't refresh
+    /// already-loaded data.
+    ///
+    /// This method uses `reload()` internally, so it properly respects task cancellation
+    /// when the view disappears.
+    ///
+    /// - Note: Skips loading if already loading with same query
     public final func onTask() async {
         self.logger.info("[onTask] status: \(await data.debugStatus)")
 
@@ -265,9 +341,18 @@ public class LoadableCollectionStore<
             return
         }
 
-        try? await reload(query: lastSetQuery, setting: .init(reason: "onTask"))
+        _ = try? await reload(query: lastSetQuery, setting: .init(reason: "onTask"))
     }
 
+    /// Called when SwiftUI .task() modifier is triggered with a specific query.
+    ///
+    /// Automatically loads data with the specified query.
+    /// Respects the `refreshOnTask` trigger setting - if disabled and already loaded
+    /// with the same query, won't refresh.
+    ///
+    /// - Parameters:
+    ///   - query: The query to use for loading
+    ///   - debounce: If true, uses debounced refresh; if false, uses reload (cancellable)
     public final func onTask(query: Query, debounce: Bool) async throws {
         self.logger.info("[onTask] status: \(await data.debugStatus)")
 
@@ -285,10 +370,13 @@ public class LoadableCollectionStore<
         if debounce {
             try? await refresh(query: query, setting: .init(reason: "onTask(query:)", debounce: true))
         } else {
-            try? await reload(query: query, setting: .init(reason: "onTask(query:)"))
+            _ = try? await reload(query: query, setting: .init(reason: "onTask(query:)"))
         }
     }
 
+    /// Cancels all ongoing operations including loads, cursor loads, debounces, and observers.
+    ///
+    /// Useful for cleanup or when you need to stop all pending operations.
     public func cancel() async {
         self.logger.info("[Cancel]")
         
@@ -381,10 +469,41 @@ public class LoadableCollectionStore<
         return try await updateSource(dataProvider: provider, query: query, setting: setting)
     }
 
+    /// Triggers a fire-and-forget refresh operation using the last set query.
+    ///
+    /// See `refresh(query:setting:)` for detailed documentation.
+    ///
+    /// - Parameter setting: Refresh settings including debounce option
     public final func refresh(setting: RefreshSettings) async throws {
         try await refresh(query: lastSetQuery, setting: setting)
     }
-    
+
+    /// Triggers a fire-and-forget refresh operation with a specific query.
+    ///
+    /// This method returns immediately without waiting for the refresh to complete.
+    /// The refresh operation runs in a detached Task that cannot be cancelled by
+    /// the caller's task context.
+    ///
+    /// **Use this when:**
+    /// - You want to trigger a refresh but don't need to wait for the result
+    /// - The refresh is triggered by user action (pull-to-refresh, button tap)
+    /// - You're in a context where blocking isn't acceptable
+    ///
+    /// **Example:**
+    /// ```swift
+    /// Button("Refresh") {
+    ///     Task {
+    ///         let query = SearchQuery(text: "swift")
+    ///         try? await store.refresh(query: query, setting: .init(reason: "User tap"))
+    ///         // Returns immediately, doesn't wait for completion
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - query: The query to use for fetching (nil for no query)
+    ///   - setting: Refresh settings including debounce option
+    /// - Note: Use `reload(query:setting:)` if you need to wait for completion or want proper cancellation
     public final func refresh(query: Query?, setting: RefreshSettings) async throws {
         self.logger.info("[refresh] [\(setting.debounce ? "debounce" : "force")] reason: \(setting.reason) state:\(await data.debugStatus)")
 
@@ -398,15 +517,53 @@ public class LoadableCollectionStore<
         }
     }
 
+    /// Triggers a reload operation using the last set query and waits for completion.
+    ///
+    /// See `reload(query:setting:)` for detailed documentation.
+    ///
+    /// - Parameter setting: Reload settings (no debounce option)
+    /// - Returns: The loaded collection
+    /// - Throws: Any error that occurred during loading
     @discardableResult
     public final func reload(setting: ReloadSettings) async throws -> [Model] {
         try await reload(query: lastSetQuery, setting: setting)
     }
 
+    /// Triggers a reload operation with a specific query and waits for completion.
+    ///
+    /// This method waits for the reload to complete and returns the loaded collection.
+    /// The operation respects structured concurrency and can be cancelled when
+    /// the caller's task is cancelled (e.g., SwiftUI .task modifier).
+    ///
+    /// **Use this when:**
+    /// - You need the loaded data immediately after calling
+    /// - You want proper task cancellation (SwiftUI .task, Task cancellation)
+    /// - You're loading data as part of a larger sequential operation
+    ///
+    /// **Example:**
+    /// ```swift
+    /// .task(id: searchQuery) {
+    ///     do {
+    ///         let items = try await store.reload(
+    ///             query: searchQuery,
+    ///             setting: .init(reason: "Search query changed")
+    ///         )
+    ///         // `items` is available here, and properly cancels if query changes
+    ///     } catch {
+    ///         print("Failed to load: \(error)")
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - query: The query to use for fetching (nil for no query)
+    ///   - setting: Reload settings (no debounce option)
+    /// - Returns: The loaded collection
+    /// - Throws: Any error that occurred during loading
+    /// - Note: This method cannot be debounced - it always executes immediately
     @discardableResult
     public final func reload(query: Query?, setting: ReloadSettings) async throws -> [Model] {
         self.logger.info("[reload] reason: \(setting.reason) query:\(query.debugDescription)")
-        await debounceReload.cancel()
         return try await reloadForce(query: query, setting: setting)
     }
 
@@ -437,11 +594,17 @@ public class LoadableCollectionStore<
     
     // ----------------------------------------
     
+    /// Checks if the collection is currently loaded.
+    ///
+    /// - Returns: true if data is in the loaded state
     @MainActor
     public final func isLoaded() -> Bool {
         return self.data.isLoaded()
     }
 
+    /// Checks if the collection is currently loading.
+    ///
+    /// - Returns: true if data is in the loading state
     @MainActor
     public final func isLoading() -> Bool {
         return self.data.isLoading()
@@ -467,6 +630,10 @@ public class LoadableCollectionStore<
         }
     }
     
+    /// Checks if a specific page is currently loading.
+    ///
+    /// - Parameter type: The page type (.next or .previous)
+    /// - Returns: true if the specified page is loading
     @MainActor
     public final func isPageLoading(type: LoadableArrayPageCursorType) -> Bool {
         switch type {
@@ -477,6 +644,15 @@ public class LoadableCollectionStore<
         }
     }
     
+    /// Checks if loading a specific page is currently possible.
+    ///
+    /// Returns true only if:
+    /// - Collection is loaded
+    /// - The specified page is not already loading
+    /// - A cursor exists for the specified page
+    ///
+    /// - Parameter type: The page type (.next or .previous)
+    /// - Returns: true if the page can be loaded
     @MainActor
     public final func isPageLoadingEnabled(type: LoadableArrayPageCursorType) -> Bool {
         guard isLoaded() else { return false }
@@ -484,11 +660,22 @@ public class LoadableCollectionStore<
         return cursorCandidate(type: type) != nil
     }
 
+    /// Checks if a cursor exists for the specified page.
+    ///
+    /// - Parameter type: The page type (.next or .previous)
+    /// - Returns: true if a cursor exists
     @MainActor
     public final func isPageAvailable(type: LoadableArrayPageCursorType) -> Bool {
         cursorCandidate(type: type) != nil
     }
     
+    /// Loads the next or previous page of items.
+    ///
+    /// Validates that the page is not currently loading and that a cursor exists
+    /// before attempting to load.
+    ///
+    /// - Parameter type: The page type (.next or .previous)
+    /// - Throws: Any error that occurred during page loading
     @MainActor
     public final func loadCoursor(type: LoadableArrayPageCursorType) async throws {
         guard isPageLoading(type: type) == false else { return }
@@ -747,6 +934,15 @@ extension LoadableCollectionStore {
 }
 
 public extension LoadableCollectionStore {
+    /// Refreshes a single item by fetching it from the server.
+    ///
+    /// Requires a modifierService to be configured. The refreshed item
+    /// replaces the existing item in the local collection.
+    ///
+    /// - Parameter objectId: The ID of the item to refresh
+    /// - Returns: The refreshed item
+    /// - Throws: LoadableError.notSupported if no modifierService is configured,
+    ///           or any error from the refresh operation
     @MainActor
     @discardableResult
     func refreshItem(objectId: Model.ID) async throws -> Model {
@@ -774,6 +970,16 @@ public extension LoadableCollectionStore {
     }
 
     
+    /// Removes an item from both the server and local collection.
+    ///
+    /// Optimistically removes the item locally first, then calls the server.
+    /// If the server call fails, restores the previous state and triggers a refresh.
+    ///
+    /// Requires a modifierService to be configured.
+    ///
+    /// - Parameter objectId: The ID of the item to remove
+    /// - Throws: LoadableError.notSupported if no modifierService is configured,
+    ///           or any error from the remove operation
     @MainActor
     func removeItem(objectId: Model.ID) async throws {
         guard let modifierService else {
@@ -811,11 +1017,17 @@ public extension LoadableCollectionStore {
 }
 
 public extension LoadableCollectionStore {
+    /// Checks if item-level modifications are supported.
+    ///
+    /// - Returns: true if a modifierService is configured
     @MainActor
     final func isModificationSupported() -> Bool {
         return modifierService != nil
     }
-    
+
+    /// Sets or updates the modifier service for item-level operations.
+    ///
+    /// - Parameter modifierService: The modifier service to use
     @MainActor
     func setModifierService(_ modifierService: any LoadableCollectionModifier<Model>) {
         self.modifierService = modifierService
@@ -894,12 +1106,25 @@ extension LoadableCollectionStore {
 }
 
 public extension LoadableCollectionStore {
+    /// Replaces all items in the collection without triggering a fetch.
+    ///
+    /// Processes the items through the dataProvider's content processor.
+    ///
+    /// - Parameter items: The new collection of items
     @MainActor
     final func replaceAllItems(_ items: [Model]) async {
         let processed = try? await dataProvider.processContent(items)
         data.set(newValue: processed ?? items)
     }
 
+    /// Updates an existing item in the local collection.
+    ///
+    /// If the item exists, replaces it and optionally moves it to a new index.
+    ///
+    /// - Parameters:
+    ///   - item: The updated item
+    ///   - newIndex: Optional new index for the item (uses original index if nil)
+    /// - Returns: The index where the item was found, or nil if not found
     @MainActor
     @discardableResult
     final func updateLocalItem(_ item: Model, newIndex: Int? = nil) async -> Int? {
@@ -917,11 +1142,18 @@ public extension LoadableCollectionStore {
         return nil
     }
 
+    /// Removes items at the specified indices from the local collection.
+    ///
+    /// - Parameter indexSet: The indices of items to remove
     @MainActor
     final func removeLocalItems(at indexSet: IndexSet) {
         data.delete(at: indexSet)
     }
 
+    /// Removes an item by ID from the local collection.
+    ///
+    /// - Parameter objectId: The ID of the item to remove
+    /// - Returns: The removed item, or nil if not found
     @MainActor
     @discardableResult
     final func removeLocalItem(withId objectId: Model.ID) -> Model? {
@@ -934,16 +1166,28 @@ public extension LoadableCollectionStore {
         }
     }
 
+    /// Finds the index of an item by ID in the local collection.
+    ///
+    /// - Parameter objectId: The ID of the item to find
+    /// - Returns: The index of the item, or nil if not found
     @MainActor
     final func getLocalItemIndex(withId objectId: Model.ID) -> Int? {
         return data.value?.firstIndex(where: { $0.id == objectId })
     }
 
+    /// Gets an item at a specific index from the local collection.
+    ///
+    /// - Parameter index: The index of the item
+    /// - Returns: The item at the specified index, or nil if out of bounds
     @MainActor
     final func getLocalItem(at index: Int) -> Model? {
         data.value?[index]
     }
 
+    /// Gets an item by ID from the local collection.
+    ///
+    /// - Parameter objectId: The ID of the item to get
+    /// - Returns: The item with the specified ID, or nil if not found
     @MainActor
     final func getLocalItem(withId objectId: Model.ID) -> Model? {
         if let index = getLocalItemIndex(withId: objectId) {
@@ -952,6 +1196,14 @@ public extension LoadableCollectionStore {
         return nil
     }
 
+    /// Inserts an item at a specific index in the local collection.
+    ///
+    /// If an item with the same ID already exists, updates it and moves it to the new index.
+    /// Emits a `.willAddItems` event before insertion.
+    ///
+    /// - Parameters:
+    ///   - item: The item to insert
+    ///   - index: The index where to insert the item
     @MainActor
     final func insertLocalItem(_ item: Model, at index: Int) async {
         if let _ = getLocalItemIndex(withId: item.id) {
@@ -965,6 +1217,11 @@ public extension LoadableCollectionStore {
         await replaceAllItems(new)
     }
 
+    /// Appends items to the end of the local collection.
+    ///
+    /// Emits a `.willAddItems` event before appending.
+    ///
+    /// - Parameter items: The items to append
     @MainActor
     final func appendLocalItems(_ items: [Model]) async {
         let current = data.value ?? []

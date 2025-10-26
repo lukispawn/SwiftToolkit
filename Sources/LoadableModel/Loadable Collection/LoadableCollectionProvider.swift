@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 public protocol LoadableCollectionProvider<Model, Cursor, Query>: Sendable {
     associatedtype Model: Identifiable
     associatedtype Cursor: Equatable

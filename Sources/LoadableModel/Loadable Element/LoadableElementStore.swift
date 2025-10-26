@@ -65,11 +65,21 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
 
     private let eventsEmitter = EventStreamMultiplexer<Event>()
 
+    /// Creates an async stream of store events.
+    ///
+    /// Events include data fetches and state updates.
+    ///
+    /// - Returns: AsyncStream of Event instances
     public func eventsSequence(
     ) async ->  AsyncStream<Event> {
         await eventsEmitter.createEventStream()
     }
 
+    /// Creates an async stream of store events.
+    ///
+    /// Events include data fetches and state updates.
+    ///
+    /// - Returns: AsyncStream of Event instances
     public func eventsStream() async -> AsyncStream<Event>{
         await eventsEmitter.createEventStream()
     }
@@ -101,6 +111,13 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
     @ObservationIgnored
     private let debounceReload: DebounceAsync = .init()
 
+    /// Creates a store with a constant value that never changes.
+    ///
+    /// - Parameters:
+    ///   - value: The constant value to store
+    ///   - inMemory: If true, disables any persistence layer
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public convenience init(
         constant value: Model,
         inMemory: Bool = false,
@@ -118,6 +135,14 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
         )
     }
 
+    /// Creates a store that always returns an error.
+    ///
+    /// Useful for testing error states or providing fallback error instances.
+    ///
+    /// - Parameters:
+    ///   - error: The error to return
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public convenience init(
         error: Error,
         configuration: Configuration = .init(),
@@ -131,6 +156,14 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
         )
     }
 
+    /// Creates a store with an async operation to fetch data.
+    ///
+    /// - Parameters:
+    ///   - operation: Async closure that fetches the data
+    ///   - initial: Optional initial value to display before first fetch
+    ///   - inMemory: If true, disables any persistence layer
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public convenience init(
         operation: @escaping (() async throws -> Model),
         initial: Model?,
@@ -152,6 +185,15 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
         )
     }
 
+    /// Creates a store with a custom provider service.
+    ///
+    /// This is the designated initializer that allows full customization.
+    ///
+    /// - Parameters:
+    ///   - service: Custom provider conforming to LoadableElementProvider
+    ///   - data: Initial data state (defaults to .notRequested)
+    ///   - configuration: Store configuration for refresh triggers, debounce, etc.
+    ///   - logger: Optional custom logger for debugging
     public init(
         service: any LoadableElementProvider<Model>,
         data: LoadedElementStatus<Model> = .notRequested,
@@ -182,6 +224,16 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
 
     // --------------
 
+    /// Called when SwiftUI .task() modifier is triggered.
+    ///
+    /// Automatically loads data if not already loaded or in error state.
+    /// Respects the `refreshOnTask` trigger setting - if disabled, won't refresh
+    /// already-loaded data.
+    ///
+    /// This method uses `reload()` internally, so it properly respects task cancellation
+    /// when the view disappears.
+    ///
+    /// - Note: Skips loading if already in loading or error state
     @MainActor
     public final func onTask() async {
         self.logger.info("[onTask] status: \(data.debugStatus)")
@@ -198,9 +250,12 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
             return
         }
 
-        try? await reload(setting: .init(reason: "onTask"))
+        _ = try? await reload(setting: .init(reason: "onTask"))
     }
 
+    /// Cancels all ongoing operations including loads, debounces, and observers.
+    ///
+    /// Useful for cleanup or when you need to stop all pending operations.
     public func cancel() async {
         self.logger.info("[Cancel]")
         refreshBag.cancel()
@@ -224,6 +279,11 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
 
 public extension LoadableElementStore {
     
+    /// Updates the data source and refreshes the data.
+    ///
+    /// - Parameters:
+    ///   - source: New provider conforming to LoadableElementProvider
+    ///   - setting: Refresh settings (debounce, resetLast, reason)
     @MainActor
     final func updateSource(
         source: any LoadableElementProvider<Model>,
@@ -233,6 +293,12 @@ public extension LoadableElementStore {
         return try await self.refresh(setting: setting)
     }
     
+    /// Updates the data source to use a new operation and refreshes the data.
+    ///
+    /// - Parameters:
+    ///   - operation: New async closure that fetches the data
+    ///   - inMemory: If true, disables any persistence layer
+    ///   - setting: Refresh settings (debounce, resetLast, reason)
     @MainActor
     final func updateSource(
         operation: @escaping (() async throws -> Model),
@@ -246,6 +312,12 @@ public extension LoadableElementStore {
         )
     }
     
+    /// Updates the data source to a constant value and refreshes the data.
+    ///
+    /// - Parameters:
+    ///   - value: New constant value to use
+    ///   - inMemory: If true, disables any persistence layer
+    ///   - setting: Refresh settings (debounce, resetLast, reason)
     @MainActor
     final func updateSource(
         constant value: Model,
@@ -259,6 +331,11 @@ public extension LoadableElementStore {
     }
 
     
+    /// Updates the data source to always return an error and refreshes the data.
+    ///
+    /// - Parameters:
+    ///   - error: The error to return
+    ///   - setting: Refresh settings (debounce, resetLast, reason)
     @MainActor
     final func updateSource(
         error:  Error,
@@ -273,6 +350,29 @@ public extension LoadableElementStore {
 public extension LoadableElementStore {
     
 
+    /// Triggers a fire-and-forget refresh operation.
+    ///
+    /// This method returns immediately without waiting for the refresh to complete.
+    /// The refresh operation runs in a detached Task that cannot be cancelled by
+    /// the caller's task context.
+    ///
+    /// **Use this when:**
+    /// - You want to trigger a refresh but don't need to wait for the result
+    /// - The refresh is triggered by user action (pull-to-refresh, button tap)
+    /// - You're in a context where blocking isn't acceptable
+    ///
+    /// **Example:**
+    /// ```swift
+    /// Button("Refresh") {
+    ///     Task {
+    ///         try? await store.refresh(setting: .init(reason: "User tap"))
+    ///         // Returns immediately, doesn't wait for completion
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameter setting: Refresh settings including debounce option
+    /// - Note: Use `reload()` if you need to wait for completion or want proper cancellation
     final func refresh(setting: RefreshSettings) async throws {
         self.logger.info("[refresh] [\(setting.debounce ? "debounce" : "force")] reason: \(setting.reason)")
 
@@ -286,10 +386,36 @@ public extension LoadableElementStore {
         }
     }
 
+    /// Triggers a reload operation and waits for completion.
+    ///
+    /// This method waits for the reload to complete and returns the loaded data.
+    /// The operation respects structured concurrency and can be cancelled when
+    /// the caller's task is cancelled (e.g., SwiftUI .task modifier).
+    ///
+    /// **Use this when:**
+    /// - You need the loaded data immediately after calling
+    /// - You want proper task cancellation (SwiftUI .task, Task cancellation)
+    /// - You're loading data as part of a larger sequential operation
+    ///
+    /// **Example:**
+    /// ```swift
+    /// .task {
+    ///     do {
+    ///         let data = try await store.reload(setting: .init(reason: "View appeared"))
+    ///         // `data` is available here, and this properly cancels if view disappears
+    ///     } catch {
+    ///         print("Failed to load: \(error)")
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameter setting: Reload settings (no debounce option)
+    /// - Returns: The loaded data
+    /// - Throws: Any error that occurred during loading
+    /// - Note: This method cannot be debounced - it always executes immediately
     @discardableResult
     final func reload(setting: ReloadSettings) async throws -> Model {
         self.logger.info("[reload] reason: \(setting.reason)")
-        await debounceReload.cancel()
         return try await reloadForce(setting: setting)
     }
 
@@ -318,6 +444,11 @@ public extension LoadableElementStore {
 }
 
 public extension LoadableElementStore {
+    /// Manually sets the data without triggering a fetch operation.
+    ///
+    /// Updates the store's state to `.loaded` with the provided value.
+    ///
+    /// - Parameter value: The new data value to set
     @MainActor
     final func setData(_ value: Model) async {
         data.set(newValue: value)
