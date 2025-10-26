@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol LoadableModelSupport {
+public protocol LoadableModelSupport {
     @MainActor
     var loadState: LoadableState { get }
     func onTask() async

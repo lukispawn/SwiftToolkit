@@ -20,7 +20,7 @@ public class LoadableCollectionStore<
     Model: Identifiable & Sendable,
     Cursor: Equatable & Sendable,
     Query: Equatable & Sendable
->: @unchecked Sendable where Model.ID: Sendable  {
+>: @unchecked Sendable, LoadableModelSupport where Model.ID: Sendable  {
     public enum Event: Sendable {
         case didFetch([Model])
         case didUpdateState(LoadedCollectionStatus<[Model], Cursor, Query>)

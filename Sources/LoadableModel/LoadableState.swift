@@ -84,5 +84,61 @@ public enum LoadableState: Equatable, CustomDebugStringConvertible,  Sendable {
             return false
         }
     }
-    
+
+    // MARK: - State Merging
+
+    /// Merges multiple `LoadableModelSupport` instances into a single `LoadableState`.
+    ///
+    /// Priority logic:
+    /// 1. If all stores are loaded → returns `.loaded`
+    /// 2. If any store has an error → returns `.failed(error)` with the first error
+    /// 3. If any store is loading → returns `.loading`
+    /// 4. Otherwise → returns `.notRequested`
+    ///
+    /// - Parameter items: Array of `LoadableModelSupport` instances to merge
+    /// - Returns: Merged `LoadableState` representing the combined state
+    @MainActor
+    public static func mergeStates(items: [any LoadableModelSupport]) -> LoadableState {
+        guard !items.isEmpty else {
+            return .notRequested
+        }
+
+        let states = items.map(\.loadState)
+
+        // Check if all are loaded
+        let allLoaded = states.allSatisfy { $0.isLoaded() }
+        if allLoaded {
+            return .loaded
+        }
+
+        // Check for any errors (return first error found)
+        if let firstError = states.compactMap(\.error).first {
+            return .failed(firstError)
+        }
+
+        // Check if any are loading
+        let anyLoading = states.contains { $0.isLoading() }
+        if anyLoading {
+            return .loading
+        }
+
+        // Default to notRequested
+        return .notRequested
+    }
+
+    /// Merges multiple `LoadableModelSupport` instances into a single `LoadableState` using variadic parameters.
+    ///
+    /// Priority logic:
+    /// 1. If all stores are loaded → returns `.loaded`
+    /// 2. If any store has an error → returns `.failed(error)` with the first error
+    /// 3. If any store is loading → returns `.loading`
+    /// 4. Otherwise → returns `.notRequested`
+    ///
+    /// - Parameter stores: Variadic `LoadableModelSupport` instances to merge
+    /// - Returns: Merged `LoadableState` representing the combined state
+    @MainActor
+    public static func mergeStates(_ stores: any LoadableModelSupport...) -> LoadableState {
+        mergeStates(items: stores)
+    }
+
 }
