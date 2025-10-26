@@ -8,14 +8,35 @@
 import Foundation
 import SwiftUI
 
+/// Represents the loading state of a single element with associated data.
+///
+/// This enum tracks the full lifecycle of async data loading:
+/// - `.notRequested`: Initial state, no load attempt made
+/// - `.isLoading(last:)`: Loading in progress, with optional previous data
+/// - `.loaded`: Successfully loaded with data
+/// - `.failed`: Load failed with an error
+///
+/// The `isLoading(last:)` case allows showing stale data while refreshing.
 public enum LoadedElementStatus<T: Sendable>: Sendable, CustomDebugStringConvertible {
-    
-    
+
+    /// No load has been requested yet.
     case notRequested
+
+    /// Loading is in progress.
+    /// - Parameter last: Optional previous data to show while loading
     case isLoading(last: T?)
+
+    /// Data loaded successfully.
+    /// - Parameter: The loaded data
     case loaded(T)
+
+    /// Load failed with an error.
+    /// - Parameter: The error that occurred
     case failed(Error)
 
+    /// Simplified loading state without the associated data.
+    ///
+    /// Maps the status to a simpler LoadableState enum.
     public var state: LoadableState {
         switch self {
         case .notRequested:
@@ -52,6 +73,9 @@ public enum LoadedElementStatus<T: Sendable>: Sendable, CustomDebugStringConvert
         }
     }
 
+    /// The current or last known value.
+    ///
+    /// Returns the loaded data, or stale data during reload, or nil otherwise.
     public var value: T? {
         switch self {
         case let .loaded(value): return value
@@ -60,6 +84,9 @@ public enum LoadedElementStatus<T: Sendable>: Sendable, CustomDebugStringConvert
         }
     }
 
+    /// The error if the load failed.
+    ///
+    /// Returns the error for `.failed` state, nil otherwise.
     public var error: Error? {
         switch self {
         case let .failed(error): return error

@@ -9,15 +9,28 @@ import Combine
 import Foundation
 import SwiftUI
 
+/// Information about a loaded collection including data, query, and pagination cursors.
 public struct LoadableCollectionInfo<T, Cursor: Equatable, Query: Equatable>: @unchecked Sendable {
-    
+
+    /// The loaded collection data.
     public let value: T
+
+    /// The query used to load this collection.
     public let query: Query?
+
+    /// Optional cursor for loading the next page.
     public let nextCursor: Cursor?
+
+    /// Optional cursor for loading the previous page.
     public let previousCursor: Cursor?
+
+    /// Optional total count of all items across all pages.
     public let allCount: Int?
+
+    /// Optional additional metadata (not type-safe).
     public let info: Any?
 
+    /// Optional filter function to apply to the data.
     public var filterHandler: (([T])->[T])?
 
     public init(
@@ -39,21 +52,48 @@ public struct LoadableCollectionInfo<T, Cursor: Equatable, Query: Equatable>: @u
     }
 }
 
+/// Defines which page (next or previous) is being loaded.
 public enum LoadableArrayPageCursorType: Equatable, Sendable{
+    /// Loading the next page of items.
     case next
+
+    /// Loading the previous page of items.
     case previous
 }
 
+/// Represents the loading state of a collection with associated data and pagination info.
+///
+/// This enum tracks the full lifecycle of async collection loading:
+/// - `.notRequested`: Initial state, no load attempt made
+/// - `.isLoading(last:cursor:query:)`: Loading in progress, with optional previous data and pagination info
+/// - `.loaded`: Successfully loaded with collection info
+/// - `.failed`: Load failed with an error
+///
+/// The `isLoading` case supports both initial loads and page loads, tracking which cursor is being loaded.
 public enum LoadedCollectionStatus<T: Sendable, Cursor: Equatable & Sendable, Query: Equatable & Sendable>:  Sendable {
 
+    /// Information about which page is currently loading.
     public struct LoadingPageInfo: Sendable {
         let cursor: Cursor
         let type: LoadableArrayPageCursorType
     }
-    
+
+    /// No load has been requested yet.
     case notRequested
+
+    /// Loading is in progress.
+    /// - Parameters:
+    ///   - last: Optional previous collection data to show while loading
+    ///   - cursor: Optional info about which page is loading (nil for initial load)
+    ///   - query: The query being used for this load
     case isLoading(last: LoadableCollectionInfo<T, Cursor, Query>?, cursor: LoadingPageInfo?, query:Query?)
+
+    /// Collection loaded successfully.
+    /// - Parameter: The loaded collection info with data and pagination cursors
     case loaded(LoadableCollectionInfo<T, Cursor, Query>)
+
+    /// Load failed with an error.
+    /// - Parameter: The error that occurred
     case failed(Error)
 
     public var debugStatus: String {
@@ -71,10 +111,16 @@ public enum LoadedCollectionStatus<T: Sendable, Cursor: Equatable & Sendable, Qu
         }
     }
     
+    /// The current or last known collection value.
+    ///
+    /// Returns the loaded collection data, or stale data during reload, or nil otherwise.
     public var value: T? {
         return loadedData?.value
     }
 
+    /// Simplified loading state without the associated data.
+    ///
+    /// Maps the status to a simpler LoadableState enum.
     public var state: LoadableState {
         switch self {
         case .notRequested:
