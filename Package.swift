@@ -10,10 +10,19 @@ let package = Package(
         .macOS(.v15)
     ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
+        // Dynamic multi-target product: consumers linking several dynamic images
+        // (app + frameworks) share ONE copy of both modules. A static product
+        // was copied into every client image, duplicating class metadata
+        // (spurious casting failures, split static state). LoadableModel must
+        // ride in the SAME framework: as a separate static product its
+        // same-package dependency on SwiftToolkit drags a private static copy
+        // of SwiftToolkit into every client. See BluetoothKit ADR-033.
         .library(
             name: "SwiftToolkit",
-            targets: ["SwiftToolkit"]),
+            type: .dynamic,
+            targets: ["SwiftToolkit", "LoadableModel"]),
+        // Kept for consumers that link only LoadableModel. Do NOT link both
+        // products from one app: that reintroduces the duplication.
         .library(
             name: "LoadableModel",
             targets: ["LoadableModel"]),
