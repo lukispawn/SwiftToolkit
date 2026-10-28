@@ -30,6 +30,7 @@ import Foundation
 ///     }
 /// }
 /// ```
+@available(*, deprecated, message: "Use LoadableCollectionSource from the Loadable product; migrate processContent normalization explicitly.")
 public protocol LoadableCollectionProvider<Model, Cursor, Query>: Sendable {
     /// The type of items in the collection.
     associatedtype Model: Identifiable
@@ -135,6 +136,7 @@ public protocol LoadableCollectionProvider<Model, Cursor, Query>: Sendable {
     ) async throws -> [Model]
 }
 
+@available(*, deprecated, message: "Use LoadableCollectionSource from the Loadable product; migrate processContent normalization explicitly.")
 public extension LoadableCollectionProvider {
     func willLoad(
         previous: LoadedCollectionStatus<[Model], Cursor, Query>,
@@ -186,6 +188,7 @@ public extension LoadableCollectionProvider {
 }
 
 /// Result type returned by collection providers containing data and pagination info.
+@available(*, deprecated, message: "Use LoadableCollection.Page from the Loadable product.")
 public struct LoadableCollectionResult<T: Identifiable, Cursor: Equatable>: @unchecked Sendable {
     /// The loaded collection items.
     public let data: [T]

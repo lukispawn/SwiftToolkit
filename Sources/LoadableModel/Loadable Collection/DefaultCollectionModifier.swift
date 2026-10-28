@@ -9,6 +9,7 @@ import Foundation
 
 /// Default implementation of LoadableCollectionModifier with block-based handlers
 /// Allows you to provide custom logic for modifying collection items
+@available(*, deprecated, message: "Keep remote CRUD in a domain service; use Loadable collection store local mutations for presentation state.")
 public struct DefaultCollectionModifier<Model: Identifiable & Sendable>: LoadableCollectionModifier, @unchecked Sendable {
     
     public typealias RefreshItemHandler = @Sendable (Model.ID) async throws -> Model
@@ -49,6 +50,7 @@ public struct DefaultCollectionModifier<Model: Identifiable & Sendable>: Loadabl
 
 // MARK: - Convenience Factory Methods
 
+@available(*, deprecated, message: "Keep remote CRUD in a domain service; use Loadable collection store local mutations for presentation state.")
 public extension DefaultCollectionModifier {
     /// Create a modifier that always throws "not supported" errors (useful for testing)
     static func notSupported() -> DefaultCollectionModifier<Model> {

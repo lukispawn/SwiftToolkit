@@ -2,6 +2,11 @@
 
 Status: in progress. Started: 2026-10-27.
 
+**Release follow-up, 2026-10-28:** the owner now explicitly requests legacy API
+deprecation and a 1.8.0 release. This supersedes the original no-deprecation scope;
+the dated iteration records below retain their historical meaning. Legacy
+implementations and products remain available during consumer migration.
+
 ## Goal
 
 Build a new, independently tested `Loadable` module alongside `LoadableModel`.

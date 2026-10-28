@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated, message: "Use LoadableValue.OperationSource from the Loadable product.")
 public struct DefaultElementProvider<T: Sendable>: LoadableElementProvider{
     
     public struct Configuration: Sendable {

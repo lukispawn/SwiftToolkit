@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated, message: "Use Loadable.LoadableState and merge(stores:); migrate readiness and retained errors explicitly.")
 public enum LoadableState: Equatable, CustomDebugStringConvertible,  Sendable {
     public static func == (lhs: LoadableState, rhs: LoadableState) -> Bool {
         switch (lhs, rhs) {

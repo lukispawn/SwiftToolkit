@@ -11,6 +11,7 @@ import Foundation
 ///
 /// Provides a unified interface for stores that manage async data loading,
 /// including state tracking, automatic refresh triggers, and task management.
+@available(*, deprecated, message: "Use LoadableStateProviding from Loadable for state; choose store-owned or caller-owned loading explicitly.")
 public protocol LoadableModelSupport {
     /// The type of data this store loads.
     associatedtype LoadedData: Sendable
@@ -52,6 +53,7 @@ public protocol LoadableModelSupport {
     func refresh(setting: RefreshSettings) async throws
 }
 
+@available(*, deprecated, message: "Move fetch interception into a domain source or wrapper when migrating to the Loadable product.")
 public enum RefreshDisposition<Model>: @unchecked Sendable {
     case provide(Result<Model, Error>)
     case proceed
@@ -60,6 +62,7 @@ public enum RefreshDisposition<Model>: @unchecked Sendable {
 /// Protocol for settings used in load operations.
 ///
 /// Provides common configuration for both refresh and reload operations.
+@available(*, deprecated, message: "Use explicit start, reload, refresh or load commands from the Loadable product.")
 public protocol LoadSettings: Sendable {
     /// A human-readable reason for this load operation (used for logging/debugging).
     var reason: String { get }
@@ -82,6 +85,7 @@ public protocol LoadSettings: Sendable {
 ///     )
 /// )
 /// ```
+@available(*, deprecated, message: "Use refresh or refreshInBackground from Loadable; keep debounce and lifecycle scheduling explicit.")
 public struct RefreshSettings: LoadSettings, Sendable {
     /// A human-readable reason for this refresh (used for logging/debugging).
     public let reason: String
@@ -137,6 +141,7 @@ public struct RefreshSettings: LoadSettings, Sendable {
 ///     // Use data here
 /// }
 /// ```
+@available(*, deprecated, message: "Use explicit reload, refresh or caller-owned load commands from the Loadable product.")
 public struct ReloadSettings: LoadSettings, Sendable {
     /// A human-readable reason for this reload (used for logging/debugging).
     public let reason: String
@@ -164,6 +169,7 @@ public struct ReloadSettings: LoadSettings, Sendable {
 ///     refreshTriggers: [.timer, .appForeground]
 /// )
 /// ```
+@available(*, deprecated, message: "Own lifecycle and automatic refresh triggers outside the new Loadable stores.")
 public enum RefreshTrigger: String, CaseIterable, Sendable, Hashable {
     /// Periodically refreshes based on refreshInterval in Configuration.
     case timer
@@ -203,6 +209,7 @@ public enum RefreshTrigger: String, CaseIterable, Sendable, Hashable {
 ///     setting: .init(debounceSettings: .custom(1.0))
 /// )
 /// ```
+@available(*, deprecated, message: "Use LoadableQueryDebouncer from the Loadable product.")
 public enum DebounceSettings: Sendable, CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {

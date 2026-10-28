@@ -195,3 +195,27 @@ and current documentation without aliases. All 304 tests pass, Xcode builds,
 iOS 17 DEBUG compilation and Release succeed. Inspected the iPhone iOS 27.1
 pending-delivery preview. There are still 64 named previews; interactive acceptance
 remains deferred. No production store or public API changes were required.
+
+## Legacy API deprecation and v1.8.0 release
+
+The owner now explicitly requests deprecating the old LoadableModel API in favor
+of LoadableValueStore/LoadableCollectionStore, committing/pushing main and publishing
+a new version. This supersedes the earlier no-deprecation boundary. Add Swift
+deprecation annotations with actionable migration messages to legacy public types
+and their extension contexts, retaining implementations and product availability.
+Do not use renamed fix-its where the new API is not source-compatible. Update
+current documentation, include the expanded adoption guide and release notes,
+and bump the documented version from the stale 1.3.0 to 1.8.0 (latest published
+tag verified as v1.7.0). Run all tests and Release builds, verify legacy clients
+still compile with warnings and new clients compile without deprecation warnings.
+Commit only task-related changes on main, push main, then tag/release the exact
+verified commit. Preserve unrelated workspace changes and GetBlue draft documents.
+
+Release candidate validated: 22 public legacy types plus their extension contexts
+are deprecated across 12 files. A source comparison confirms implementation bodies
+are unchanged. All 304 tests in 38 suites pass; all Release products build. Public
+consumer probes confirm legacy compilation with actionable warnings and new API
+compilation with warnings treated as errors. README, the expanded API/agent guide,
+migration mapping and changelog describe 1.8.0 and retained legacy availability.
+The prepared candidate is ready for main push and tagging; consumer migration and
+interactive chat acceptance remain independent work.

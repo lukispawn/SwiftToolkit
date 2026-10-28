@@ -296,3 +296,17 @@ Xcode builds successfully, DEBUG preview macros compile for iOS 17 Simulator,
 and the Release product builds with the entire feature excluded. The iPhone Duo
 iOS 27.1 pending-message render was inspected after moving the feature files.
 The gallery still has 64 named previews. Interactive acceptance remains deferred.
+
+## Legacy deprecation in 1.8.0
+
+All 304 package test declarations in 38 suites pass after applying migration
+deprecations to the 22 legacy public types (237 new-module and 67 existing tests,
+plus parameterized cases). Deprecation diagnostics in the legacy consumer tests
+are intentional. Production code has no new internal deprecation warnings.
+Implementation bodies are unchanged; only availability annotations are added.
+Public-import consumer probes verify that old stores/states still compile with
+actionable warnings and the new value/collection/common-state API compiles with
+warnings treated as errors. These probes check source compatibility, not a
+completed GetBlue migration or binary compatibility across compiler versions.
+Release builds all package products successfully after these annotations; the
+deprecated implementation does not emit internal deprecation warnings.

@@ -24,6 +24,7 @@ import Foundation
 ///     }
 /// }
 /// ```
+@available(*, deprecated, message: "Use LoadableValueSource from the Loadable product.")
 public protocol LoadableElementProvider<Model>: Sendable {
 
     /// Called before loading to optionally provide cached data or proceed with load.
@@ -46,6 +47,7 @@ public protocol LoadableElementProvider<Model>: Sendable {
     func load() async throws -> Model
 }
 
+@available(*, deprecated, message: "Use LoadableValueSource from the Loadable product.")
 public extension LoadableElementProvider {
     func load() async throws -> Model {
         throw LoadableError.notSupported("load()")
@@ -57,6 +59,7 @@ public extension LoadableElementProvider {
 }
 
 /// Errors that can occur in loadable operations.
+@available(*, deprecated, message: "Use domain source errors or LoadableUsageError from the Loadable product as appropriate.")
 public enum LoadableError: Error, LocalizedError {
     /// The requested operation is not supported by this provider or modifier.
     case notSupported(String)

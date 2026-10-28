@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 /// Information about a loaded collection including data, query, and pagination cursors.
+@available(*, deprecated, message: "Use LoadableCollection.Snapshot from the Loadable product.")
 public struct LoadableCollectionInfo<T, Cursor: Equatable, Query: Equatable>: @unchecked Sendable {
 
     /// The loaded collection data.
@@ -53,6 +54,7 @@ public struct LoadableCollectionInfo<T, Cursor: Equatable, Query: Equatable>: @u
 }
 
 /// Defines which page (next or previous) is being loaded.
+@available(*, deprecated, message: "Use LoadableCollection.Direction from the Loadable product.")
 public enum LoadableArrayPageCursorType: Equatable, Sendable{
     /// Loading the next page of items.
     case next
@@ -70,6 +72,7 @@ public enum LoadableArrayPageCursorType: Equatable, Sendable{
 /// - `.failed`: Load failed with an error
 ///
 /// The `isLoading` case supports both initial loads and page loads, tracking which cursor is being loaded.
+@available(*, deprecated, message: "Use LoadableCollection.Snapshot from the Loadable product; readiness and activity are separate.")
 public enum LoadedCollectionStatus<T: Sendable, Cursor: Equatable & Sendable, Query: Equatable & Sendable>:  Sendable {
 
     /// Information about which page is currently loading.
@@ -283,6 +286,7 @@ public enum LoadedCollectionStatus<T: Sendable, Cursor: Equatable & Sendable, Qu
     }
 }
 
+@available(*, deprecated, message: "Use LoadableCollection.Snapshot from the Loadable product; readiness and activity are separate.")
 public extension LoadedCollectionStatus {
     mutating func setIsLoading(cursor: LoadingPageInfo?, query: Query?, resetLast: Bool = false) {
         let lastValue = resetLast ? nil :loadedData
@@ -324,6 +328,7 @@ public extension LoadedCollectionStatus {
     }
 }
 
+@available(*, deprecated, message: "Use LoadableCollection.Snapshot from the Loadable product; readiness and activity are separate.")
 extension LoadedCollectionStatus: Equatable where T: Equatable {
     public static func == (lhs: LoadedCollectionStatus<T, Cursor, Query>, rhs: LoadedCollectionStatus<T, Cursor, Query>)->Bool {
         switch (lhs, rhs) {

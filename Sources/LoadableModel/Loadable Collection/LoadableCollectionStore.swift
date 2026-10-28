@@ -16,6 +16,7 @@ import UIKit
 #endif
 
 @Observable
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableCollectionStore<Source>. See Docs/Loadable/Migration.md.")
 public class LoadableCollectionStore<
     Model: Identifiable & Sendable,
     Cursor: Equatable & Sendable,
@@ -598,6 +599,7 @@ public class LoadableCollectionStore<
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableCollectionStore<Source>. See Docs/Loadable/Migration.md.")
 extension LoadableCollectionStore {
     // MARK: - New Load API
 
@@ -755,6 +757,7 @@ extension LoadableCollectionStore {
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableCollectionStore<Source>. See Docs/Loadable/Migration.md.")
 extension LoadableCollectionStore {
     // MARK: - Deprecated Refresh/Reload API
 
@@ -853,6 +856,7 @@ extension LoadableCollectionStore {
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableCollectionStore<Source>. See Docs/Loadable/Migration.md.")
 extension LoadableCollectionStore {
     // -------------
     @discardableResult
@@ -1101,6 +1105,7 @@ extension LoadableCollectionStore {
     // --------------
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableCollectionStore<Source>. See Docs/Loadable/Migration.md.")
 public extension LoadableCollectionStore {
     /// Refreshes a single item by fetching it from the server.
     ///
@@ -1190,6 +1195,7 @@ public extension LoadableCollectionStore {
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableCollectionStore<Source>. See Docs/Loadable/Migration.md.")
 public extension LoadableCollectionStore {
     /// Checks if item-level modifications are supported.
     ///
@@ -1208,6 +1214,7 @@ public extension LoadableCollectionStore {
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableCollectionStore<Source>. See Docs/Loadable/Migration.md.")
 extension LoadableCollectionStore {
     private func observeRefresh() {
         if configuration.refreshTriggers.contains(.reachability) {
@@ -1291,6 +1298,7 @@ extension LoadableCollectionStore {
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableCollectionStore<Source>. See Docs/Loadable/Migration.md.")
 public extension LoadableCollectionStore {
     /// Replaces all items in the collection without triggering a fetch.
     ///

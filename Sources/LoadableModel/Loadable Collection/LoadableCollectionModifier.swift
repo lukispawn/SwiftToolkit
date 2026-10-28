@@ -9,6 +9,7 @@ import Foundation
 
 /// Protocol for modifying items in a loadable collection
 /// Separate from LoadableCollectionProvider to follow Single Responsibility Principle
+@available(*, deprecated, message: "Keep remote CRUD in a domain service; use Loadable collection store local mutations for presentation state.")
 public protocol LoadableCollectionModifier<Model>: Sendable {
     associatedtype Model: Identifiable
     

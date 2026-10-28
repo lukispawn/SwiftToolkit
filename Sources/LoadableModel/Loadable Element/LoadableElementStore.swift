@@ -17,6 +17,7 @@ import UIKit
 #endif
 
 @Observable
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableValueStore<Source>. See Docs/Loadable/Migration.md.")
 public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unchecked Sendable {
     public typealias LoadedData = Model
 
@@ -315,6 +316,7 @@ public class LoadableElementStore<Model: Sendable>: LoadableModelSupport, @unche
     // --------------
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableValueStore<Source>. See Docs/Loadable/Migration.md.")
 public extension LoadableElementStore {
     
     /// Updates the data source and refreshes the data.
@@ -385,6 +387,7 @@ public extension LoadableElementStore {
         )
     }
 }
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableValueStore<Source>. See Docs/Loadable/Migration.md.")
 public extension LoadableElementStore {
 
     /// Triggers a fire-and-forget load operation.
@@ -498,6 +501,7 @@ public extension LoadableElementStore {
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableValueStore<Source>. See Docs/Loadable/Migration.md.")
 public extension LoadableElementStore {
     
     /// Triggers a fire-and-forget refresh operation.
@@ -522,6 +526,7 @@ public extension LoadableElementStore {
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableValueStore<Source>. See Docs/Loadable/Migration.md.")
 public extension LoadableElementStore {
     /// Manually sets the data without triggering a fetch operation.
     ///
@@ -534,6 +539,7 @@ public extension LoadableElementStore {
     }
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableValueStore<Source>. See Docs/Loadable/Migration.md.")
 extension LoadableElementStore {
     @discardableResult
     private func executeLoad(setting: any LoadSettings) async throws -> Model {
@@ -606,6 +612,7 @@ extension LoadableElementStore {
 
 }
 
+@available(*, deprecated, message: "Import Loadable and migrate to LoadableValueStore<Source>. See Docs/Loadable/Migration.md.")
 extension LoadableElementStore {
     private func observeRefresh() {
         if configuration.refreshTriggers.contains(.reachability) {

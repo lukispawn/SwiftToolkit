@@ -17,6 +17,7 @@ import SwiftUI
 /// - `.failed`: Load failed with an error
 ///
 /// The `isLoading(last:)` case allows showing stale data while refreshing.
+@available(*, deprecated, message: "Use LoadableValue.Snapshot from the Loadable product; readiness and activity are separate.")
 public enum LoadedElementStatus<T: Sendable>: Sendable, CustomDebugStringConvertible {
 
     /// No load has been requested yet.
@@ -131,6 +132,7 @@ public enum LoadedElementStatus<T: Sendable>: Sendable, CustomDebugStringConvert
     }
 }
 
+@available(*, deprecated, message: "Use LoadableValue.Snapshot from the Loadable product; readiness and activity are separate.")
 public extension LoadedElementStatus {
     mutating func setIsLoading(resetLast: Bool = false) {
         let lastValue = resetLast ? nil : value
@@ -187,6 +189,7 @@ public extension LoadedElementStatus {
     }
 }
 
+@available(*, deprecated, message: "Use LoadableValue.Snapshot from the Loadable product; readiness and activity are separate.")
 extension LoadedElementStatus: Equatable where T: Equatable {
     public static func == (lhs: LoadedElementStatus<T>, rhs: LoadedElementStatus<T>) -> Bool {
         switch (lhs, rhs) {

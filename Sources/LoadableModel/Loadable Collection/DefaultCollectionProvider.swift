@@ -5,6 +5,7 @@
 //  Created by Lukasz Zajdel on 31/05/2025.
 //
 
+@available(*, deprecated, message: "Use LoadableCollection.OperationSource from the Loadable product.")
 public struct DefaultCollectionProvider<T:Identifiable & Sendable, C:Equatable & Sendable, Q: Equatable & Sendable>: LoadableCollectionProvider{
     
     public struct Configuration: Sendable {

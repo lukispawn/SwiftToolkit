@@ -4,16 +4,26 @@ A comprehensive collection of Swift utilities for modern app development. SwiftT
 
 ## Quick Navigation
 
-[Loadable — new Observation-based module](Docs/Loadable/README.md) — isolated value/collection loading engine under development; existing LoadableModel remains available.
+[Loadable — API and adoption guide](Docs/Loadable/README.md) — recommended since **1.8.0**. Observation-based value/collection stores, SwiftUI UI kit, search, pagination and shared state. Includes quick starts, task ownership rules and a checklist for coding agents.
 
-🚀 **[LoadableModel - State Management Framework](#loadablemodel---complete-guide)** - Advanced async data loading with SwiftUI integration  
+🚀 **[Legacy LoadableModel](#loadablemodel---complete-guide)** — deprecated since 1.8.0; retained for existing consumers. See the [migration guide](Docs/Loadable/Migration.md).
 📦 **[Core Utilities](#core-utilities)** - Async, storage, logging, and concurrency tools  
 ⚡ **[Installation](#installation)** - Swift Package Manager setup  
 🏗️ **[Architecture](#architecture)** - Project structure and design patterns  
 
 ## Features
 
-### 📊 State Management (LoadableModel) ⭐
+### Loadable — recommended state management
+
+- **LoadableValueStore** and **LoadableCollectionStore**: MainActor, Observation-based loading from Sendable sources
+- **Pagination**: previous/next pages, ID merging, cancellation and stale-result protection
+- **LoadableUI**: configurable lists, custom layouts and automatic pagination edges
+- **Search and shared state**: debounced queries and computed readiness across stores
+- **Examples**: library-local SwiftUI gallery and a namespaced chat feature
+
+See the [complete Loadable guide](Docs/Loadable/README.md) and [1.8.0 release notes](CHANGELOG.md).
+
+### Legacy LoadableModel compatibility (deprecated)
 - **LoadableElementStore**: Observable store for single data entities with loading states
 - **LoadableCollectionStore**: Collection management with pagination and CRUD operations
 - **LoadableState**: Unified loading state enum (notRequested, loading, loaded, failed)
@@ -58,7 +68,7 @@ Add SwiftToolkit to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/lukispawn/SwiftToolkit.git", from: "1.0.0")
+    .package(url: "https://github.com/lukispawn/SwiftToolkit.git", from: "1.8.0")
 ]
 ```
 
@@ -68,15 +78,21 @@ Then add it to your target dependencies:
 .target(
     name: "YourTarget",
     dependencies: [
-        "SwiftToolkit",  // Core utilities
-        "LoadableModel"  // State management (optional)
+        .product(name: "SwiftToolkit", package: "SwiftToolkit"), // Core utilities; also carries legacy LoadableModel
+        .product(name: "Loadable", package: "SwiftToolkit")      // New state management
     ]
 )
 ```
 
 ## Usage Examples
 
-### LoadableModel - Complete Guide ⭐
+### LoadableModel - Complete Guide
+
+**Deprecated since 1.8.0.** This section documents the retained legacy API for
+existing consumers. New features should use the [Loadable guide](Docs/Loadable/README.md).
+Migrate to `LoadableValueStore<Source>` and `LoadableCollectionStore<Source>`;
+the new source, state, cancellation and local-mutation contracts require deliberate
+adaptation rather than a name-only replacement. No legacy implementation is removed.
 
 LoadableModel provides sophisticated state management for asynchronous data loading with automatic retry, caching, and SwiftUI integration.
 
@@ -516,4 +532,4 @@ MIT License - see LICENSE file for details.
 
 ## Version
 
-Current version: 1.3.0
+Current version: **1.8.0**. See [release notes](CHANGELOG.md).
