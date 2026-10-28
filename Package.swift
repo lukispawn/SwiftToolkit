@@ -10,6 +10,8 @@ let package = Package(
         .macOS(.v15)
     ],
     products: [
+        // Independent dynamic image, also safe to share across app/framework consumers.
+        .library(name: "Loadable", type: .dynamic, targets: ["Loadable"]),
         // Dynamic multi-target product: consumers linking several dynamic images
         // (app + frameworks) share ONE copy of both modules. A static product
         // was copied into every client image, duplicating class metadata
@@ -32,6 +34,8 @@ let package = Package(
         /*.package(url: "https://github.com/apple/swift-testing.git", from: "0.10.0")*/
     ],
     targets: [
+        .target(name: "Loadable"),
+        .testTarget(name: "LoadableTests", dependencies: ["Loadable"]),
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(

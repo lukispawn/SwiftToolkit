@@ -4,6 +4,8 @@ A comprehensive collection of Swift utilities for modern app development. SwiftT
 
 ## Quick Navigation
 
+[Loadable — new Observation-based module](Docs/Loadable/README.md) — isolated value/collection loading engine under development; existing LoadableModel remains available.
+
 🚀 **[LoadableModel - State Management Framework](#loadablemodel---complete-guide)** - Advanced async data loading with SwiftUI integration  
 📦 **[Core Utilities](#core-utilities)** - Async, storage, logging, and concurrency tools  
 ⚡ **[Installation](#installation)** - Swift Package Manager setup  
