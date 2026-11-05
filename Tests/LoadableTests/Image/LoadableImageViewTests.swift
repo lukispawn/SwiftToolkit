@@ -46,4 +46,24 @@ struct LoadableImageViewTests {
             debounce: .seconds(1),
             key: { _, _, _ in PreviewImageKey(contentID: "a") })
     }
+
+    @Test func overlayShowsOnlyOverLoadedImage() {
+        #expect(LoadableImageLayout.presentation(hasImage: true, hasError: false) == .image)
+        #expect(LoadableImageLayout.presentation(hasImage: true, hasError: true) == .image)
+        #expect(LoadableImageLayout.presentation(hasImage: false, hasError: true) == .failure)
+        #expect(LoadableImageLayout.presentation(hasImage: false, hasError: false) == .placeholder)
+        #expect(LoadableImageLayout.showsOverlay(for: .image))
+        #expect(!LoadableImageLayout.showsOverlay(for: .failure))
+        #expect(!LoadableImageLayout.showsOverlay(for: .placeholder))
+    }
+
+    @MainActor @Test func overlayInitializersCompile() {
+        let source = StaticImageSource(gray: 0.5, size: CGSize(width: 4, height: 4))
+        let key: (CGSize, ColorScheme, CGFloat) -> PreviewImageKey? = { _, _, _ in PreviewImageKey(contentID: "a") }
+        _ = LoadableImage(source: source, key: key, overlay: { Image(systemName: "mappin") })
+        _ = LoadableImage(
+            source: source, key: key,
+            placeholder: { Color.gray }, failure: { _ in Color.red }, overlay: { Image(systemName: "mappin") })
+        _ = LoadableImage(source: source, key: key)
+    }
 }

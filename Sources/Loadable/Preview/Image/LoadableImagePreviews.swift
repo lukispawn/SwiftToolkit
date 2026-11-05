@@ -44,6 +44,7 @@ final class DemoLoadCounter {
 struct DemoImageTile<Source: LoadableImageSource>: View where Source.Query == PreviewImageKey {
     let source: Source
     let key: PreviewImageKey?
+    var showsPin = false
 
     var body: some View {
         LoadableImage(
@@ -54,6 +55,11 @@ struct DemoImageTile<Source: LoadableImageSource>: View where Source.Query == Pr
                     LoadableImagePlaceholder()
                     Button(action: retry) { Label("Retry", systemImage: "arrow.clockwise") }
                         .buttonStyle(.bordered).controlSize(.small)
+                }
+            },
+            overlay: {
+                if showsPin {
+                    Image(systemName: "mappin.circle.fill").font(.title).foregroundStyle(.red, .white)
                 }
             })
     }
@@ -73,7 +79,7 @@ struct LoadableImageStatesDemo: View {
     private func tile<S: LoadableImageSource>(_ title: String, _ source: S) -> some View
     where S.Query == PreviewImageKey {
         VStack {
-            DemoImageTile(source: source, key: PreviewImageKey(contentID: "forest"))
+            DemoImageTile(source: source, key: PreviewImageKey(contentID: "forest"), showsPin: true)
                 .frame(width: 110, height: 110).clipShape(.rect(cornerRadius: 12))
             Text(title).font(.caption)
         }

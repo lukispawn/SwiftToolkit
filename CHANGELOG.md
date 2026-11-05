@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.10.0 — 2026-11-05
+
+### Added
+
+- `LoadableImage` `overlay:` parameter: a `@ViewBuilder` drawn only over a loaded image, fading with it.
+  Existing initializers are unchanged (empty overlay). `LoadableImage` gained a fourth generic
+  parameter `Overlay`; code that spells out the type with explicit generics needs `EmptyView` added.
+
 ## 1.9.0 — 2026-11-05
 
 ### Added

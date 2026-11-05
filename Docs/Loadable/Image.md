@@ -101,12 +101,22 @@ struct PlaceMap: View {
                     latitude: latitude, longitude: longitude, extentMeters: 3000,
                     colorScheme: scheme, displayScale: scale, size: size)
             },
-            placeholder: { LoadableImagePlaceholder() },
-            failure: { _ in LoadableImagePlaceholder() })
-        .overlay { Image(systemName: "mappin.circle.fill").font(.title).foregroundStyle(.red) }
+            overlay: { Image(systemName: "mappin.circle.fill").font(.title).foregroundStyle(.red) })
     }
 }
 ```
+
+### Overlay over the loaded image
+
+`overlay:` is a `@ViewBuilder` drawn only over a loaded image, in the image's exact frame. A plain
+`.overlay` outside the view would also sit over the placeholder and the failure view, and the outside
+cannot tell which state the image is in. The overlay fades in and out with the image (no animation
+under Reduce Motion), stays while an older image is kept during a reload of the same content, and goes
+away at once when `contentID` changes. It is hidden from VoiceOver with the image unless
+`accessibilityLabel` is given. The shape follows `AsyncImage`'s separate content and placeholder
+closures, but takes no `Image` argument: the image is a `CGImage` the view sizes itself, so the
+closure only builds what goes on top. The full initializer takes `overlay:` after `failure:`; the
+short one takes it alone.
 
 The key rounds coordinates to 5 decimal places (about 1 m) and the frame up to multiples of
 64 pt; its `contentID` is the coordinate plus extent. The source uses `MKMapSnapshotter` without

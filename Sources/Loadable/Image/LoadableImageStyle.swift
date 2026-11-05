@@ -36,6 +36,17 @@ enum LoadableImageLayout {
         return provider(size, colorScheme, displayScale)
     }
 
+    enum Presentation: Equatable { case image, failure, placeholder }
+
+    /// An image that is still visible wins over an error, as in the view.
+    static func presentation(hasImage: Bool, hasError: Bool) -> Presentation {
+        if hasImage { return .image }
+        return hasError ? .failure : .placeholder
+    }
+
+    /// The overlay belongs to the loaded image only, never to the placeholder or failure view.
+    static func showsOverlay(for presentation: Presentation) -> Bool { presentation == .image }
+
     static func animation(reduceMotion: Bool, style: LoadableImageStyle) -> Animation? {
         reduceMotion ? nil : .easeOut(duration: style.fadeDuration)
     }
