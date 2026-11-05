@@ -33,4 +33,17 @@ struct LoadableImageViewTests {
         #expect(LoadableImageStyle.automatic.contentMode == .fill)
         #expect(LoadableImageStyle.fit.contentMode == .fit)
     }
+
+    @Test func failureIsNeverHiddenFromAccessibility() {
+        #expect(!LoadableImageLayout.isAccessibilityHidden(label: nil, isFailure: true))
+        #expect(LoadableImageLayout.isAccessibilityHidden(label: nil, isFailure: false))
+        #expect(!LoadableImageLayout.isAccessibilityHidden(label: "Map", isFailure: false))
+    }
+
+    @MainActor @Test func debounceIsConfigurable() {
+        _ = LoadableImage(
+            source: StaticImageSource(gray: 0.5, size: CGSize(width: 4, height: 4)),
+            debounce: .seconds(1),
+            key: { _, _, _ in PreviewImageKey(contentID: "a") })
+    }
 }

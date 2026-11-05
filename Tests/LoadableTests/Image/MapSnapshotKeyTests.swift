@@ -45,4 +45,12 @@ struct MapSnapshotKeyTests {
     @Test func nilKeyThrowsMissingKey() async {
         await #expect(throws: LoadableImageError.missingKey) { try await MapSnapshotSource().fetch(query: nil) }
     }
+
+    @Test func preCancelledFetchThrowsCancellationWithoutRendering() async {
+        let task = Task {
+            try await MapSnapshotSource().fetch(query: key(size: CGSize(width: 64, height: 64)))
+        }
+        task.cancel()
+        await #expect(throws: CancellationError.self) { try await task.value }
+    }
 }

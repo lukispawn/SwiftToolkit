@@ -39,7 +39,7 @@ public actor LoadableImageCache {
         }
     }
 
-    private final class Box {
+    private final class Box: Sendable {
         let value: LoadableImageValue
         init(_ value: LoadableImageValue) { self.value = value }
     }
@@ -55,14 +55,19 @@ public actor LoadableImageCache {
         let continuation: CheckedContinuation<Void, any Error>
     }
 
-    private let storage = NSCache<Entry, Box>()
+    // Safety: Apple documents NSCache as safe to use from multiple threads, and `cache` is a `let`.
+    private final class Storage: @unchecked Sendable {
+        let cache = NSCache<Entry, Box>()
+    }
+
+    private nonisolated let storage = Storage()
     private var flights: [Entry: Flight] = [:]
     private var slotWaiters: [SlotWaiter] = []
     private var activeLoads = 0
     private let maxConcurrentLoads: Int
 
     public init(byteLimit: Int = LoadableImageCache.defaultByteLimit, maxConcurrentLoads: Int = 2) {
-        storage.totalCostLimit = byteLimit
+        storage.cache.totalCostLimit = byteLimit
         self.maxConcurrentLoads = max(1, maxConcurrentLoads)
     }
 
@@ -73,7 +78,7 @@ public actor LoadableImageCache {
     ) async throws -> LoadableImageValue {
         try Task.checkCancellation()
         let entry = Entry(namespace: namespace, key: AnyHashable(key))
-        if let cached = storage.object(forKey: entry) { return cached.value }
+        if let cached = storage.cache.object(forKey: entry) { return cached.value }
 
         let flightID: UUID
         let task: Task<LoadableImageValue, any Error>
@@ -87,9 +92,10 @@ public actor LoadableImageCache {
             task = Task { [self] in
                 try await acquireSlot()
                 defer { releaseSlot() }
+                try Task.checkCancellation()
                 let value = try await load()
                 try Task.checkCancellation()
-                storage.setObject(Box(value), forKey: entry, cost: value.cost)
+                storage.cache.setObject(Box(value), forKey: entry, cost: value.cost)
                 return value
             }
             flights[entry] = Flight(id: flightID, task: task, waiters: 1)
@@ -106,8 +112,13 @@ public actor LoadableImageCache {
         }
     }
 
+    /// Synchronous lookup that never starts a load.
+    public nonisolated func cachedImage<Key: Hashable & Sendable>(for key: Key, namespace: String) -> LoadableImageValue? {
+        storage.cache.object(forKey: Entry(namespace: namespace, key: AnyHashable(key)))?.value
+    }
+
     public func removeAll() {
-        storage.removeAllObjects()
+        storage.cache.removeAllObjects()
     }
 
     // MARK: - Flights

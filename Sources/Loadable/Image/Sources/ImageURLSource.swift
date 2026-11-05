@@ -39,13 +39,14 @@ public struct ImageURLSource: LoadableImageSource {
             throw LoadableImageError.badStatus(http.statusCode)
         }
         try Task.checkCancellation()
-        guard let image = Self.decode(data, maxPixel: max(query.pixelSize.width, query.pixelSize.height)) else {
+        guard let image = Self.decode(data, frame: query.pixelSize) else {
             throw LoadableImageError.undecodable
         }
         return LoadableImageValue(cgImage: image, scale: query.scale)
     }
 
-    private static func decode(_ data: Data, maxPixel: CGFloat) -> CGImage? {
+    private static func decode(_ data: Data, frame: CGSize) -> CGImage? {
+        let maxPixel = max(frame.width, frame.height)
         guard let source = CGImageSourceCreateWithData(data as CFData, nil), CGImageSourceGetCount(source) > 0
         else { return nil }
         var options: [CFString: Any] = [
@@ -53,11 +54,16 @@ public struct ImageURLSource: LoadableImageSource {
             kCGImageSourceCreateThumbnailWithTransform: true,
         ]
         let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any]
-        let original = max(
-            (properties?[kCGImagePropertyPixelWidth] as? CGFloat) ?? 0,
-            (properties?[kCGImagePropertyPixelHeight] as? CGFloat) ?? 0)
-        let limit = original > 0 ? min(maxPixel, original) : maxPixel
-        if limit > 0 { options[kCGImageSourceThumbnailMaxPixelSize] = limit }
+        let width = (properties?[kCGImagePropertyPixelWidth] as? NSNumber)?.doubleValue ?? 0
+        let height = (properties?[kCGImagePropertyPixelHeight] as? NSNumber)?.doubleValue ?? 0
+        let longest = max(width, height)
+        // The limit applies to the longest side, so size it for filling the frame, not fitting it.
+        var limit = maxPixel
+        if longest > 0, frame.width > 0, frame.height > 0 {
+            let fill = max(frame.width / width, frame.height / height)
+            limit = min(longest * fill, longest)
+        }
+        if limit > 0 { options[kCGImageSourceThumbnailMaxPixelSize] = limit.rounded(.up) }
         return CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary)
     }
 }

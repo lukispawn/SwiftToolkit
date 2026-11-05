@@ -46,7 +46,8 @@ LoadableImage(
 ```
 
 The source is fixed for the lifetime of the view; attach `.id(_:)` to replace it. Images are
-decorative by default (hidden from VoiceOver); pass `accessibilityLabel` to expose one.
+decorative by default (hidden from VoiceOver); pass `accessibilityLabel` to expose one. The
+failure view is never hidden, so its retry action stays reachable.
 `.loadableImageStyle(.fit)` shows the whole image instead of filling the frame.
 
 ## Keys: content versus rendition
@@ -55,10 +56,12 @@ A key identifies one rendition of an image. Its `contentID` identifies the conte
 without size or appearance:
 
 - Same `contentID`, different key (the frame was resized, dark mode toggled): the view waits
-  150 ms, keeps the old image visible, and swaps when the new one arrives.
+  150 ms (set it with the `debounce:` parameter), keeps the old image visible, and swaps when the
+  new one arrives. A key whose image is already in the cache skips the wait.
 - Different `contentID` (another URL, another place): the old image is dropped at once and the
   placeholder shows. A view never shows another content's image.
-- The first load never waits.
+- A size change while the first load is still running waits too, so a window drag does not start
+  a load per step. The very first load never waits.
 
 Round sizes inside your key so small resizes do not reload. `LoadableImageSize.rounded(_:)`
 rounds each dimension up to a multiple of 64 pt; the built-in keys already do this.
@@ -131,7 +134,8 @@ struct AvatarSource: LoadableImageSource {
 }
 ```
 
-A source is `Sendable` (an actor or a value type), returns a `CGImage` with its scale, never
+A source may also implement `cachedValue(for:)` (`CachedImageSource` does) so a reappearing view
+shows a cached image without waiting. A source is `Sendable` (an actor or a value type), returns a `CGImage` with its scale, never
 touches the view, and checks cancellation in long work.
 
 ## Previews and tests

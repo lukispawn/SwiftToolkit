@@ -16,6 +16,7 @@ final class LoadableImageModel<Source: LoadableImageSource> {
 
     private(set) var phase: Phase = .none
 
+    @ObservationIgnored private let source: Source
     @ObservationIgnored private let store: LoadableValueStore<Source>
     @ObservationIgnored private let debounce: Duration
     @ObservationIgnored private var requestedKey: Source.Query?
@@ -24,6 +25,7 @@ final class LoadableImageModel<Source: LoadableImageSource> {
     @ObservationIgnored private var contentID: Source.Query.ContentID?
 
     init(source: Source, debounce: Duration = .milliseconds(150)) {
+        self.source = source
         store = LoadableValueStore(source: source)
         self.debounce = debounce
     }
@@ -59,9 +61,17 @@ final class LoadableImageModel<Source: LoadableImageSource> {
             phase = .loaded(loadedValue)
             return
         }
-        if contentID == key.contentID, let visible = loadedValue {
+        if let cached = source.cachedValue(for: key) {
+            contentID = key.contentID
+            loadedKey = key
+            loadedValue = cached
+            phase = .loaded(cached)
+            return
+        }
+        if contentID == key.contentID, loadedValue != nil || isLoading {
+            // Same content already shown or in flight: wait so a burst of size changes loads once.
             do { try await Task.sleep(for: debounce) } catch { return }
-            phase = .loading(previous: visible)
+            phase = .loading(previous: loadedValue)
         } else {
             contentID = key.contentID
             loadedKey = nil

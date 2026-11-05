@@ -71,4 +71,12 @@ struct ImageURLSourceTests {
         #expect(key(url, points: 65) == key(url, points: 128))
         #expect(key(url, points: 65) != key(url, points: 129))
     }
+
+    @Test func decodesToFillSizeWhenAspectRatioDiffers() async throws {
+        let url = try TestImage.writeTemp(TestImage.pngData(width: 1000, height: 2000), ext: "png")
+        // 64 x 64 pt at 2x is a 128 px square; filling it needs at least 128 px in both directions.
+        let value = try await ImageURLSource().fetch(query: key(url))
+        #expect(value.cgImage.width >= 128)
+        #expect(value.cgImage.height >= 128)
+    }
 }

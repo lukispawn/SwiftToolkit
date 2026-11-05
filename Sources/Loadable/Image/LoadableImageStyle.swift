@@ -40,7 +40,8 @@ enum LoadableImageLayout {
         reduceMotion ? nil : .easeOut(duration: style.fadeDuration)
     }
 
-    static func isAccessibilityHidden(label: LocalizedStringKey?) -> Bool {
-        label == nil
+    /// Decorative images are hidden; a failure view holds a retry action and must stay reachable.
+    static func isAccessibilityHidden(label: LocalizedStringKey?, isFailure: Bool = false) -> Bool {
+        !isFailure && label == nil
     }
 }

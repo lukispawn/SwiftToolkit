@@ -116,4 +116,33 @@ struct LoadableImageModelTests {
         await model.update(key: key("a"))
         #expect(await source.fetchCount == 1)
     }
+
+    @Test func sameContentChangeDuringFirstLoadIsDebounced() async throws {
+        let source = makeSource(delay: .milliseconds(300))
+        let model = LoadableImageModel(source: source, debounce: .milliseconds(150))
+        let first = Task { await model.update(key: key("a", 0)) }
+        try await waitUntil { model.isLoading }
+        try await Task.sleep(for: .milliseconds(30))
+        first.cancel()
+        await first.value
+        let second = Task { await model.update(key: key("a", 1)) }
+        try await Task.sleep(for: .milliseconds(20))
+        second.cancel()
+        await second.value
+        await model.update(key: key("a", 2))
+        #expect(await source.fetchCount == 2)
+    }
+
+    @Test func cachedRenditionSkipsDebounce() async throws {
+        let cached = CachedImageSource(makeSource(delay: .zero), cache: LoadableImageCache())
+        _ = try await cached.fetch(query: key("a", 0))
+        _ = try await cached.fetch(query: key("a", 1))
+        let model = LoadableImageModel(source: cached, debounce: .seconds(5))
+        await model.update(key: key("a", 0))
+        let start = ContinuousClock.now
+        await model.update(key: key("a", 1))
+        #expect(ContinuousClock.now - start < .seconds(1))
+        #expect(model.image != nil)
+        #expect(!model.isLoading)
+    }
 }

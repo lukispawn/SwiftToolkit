@@ -28,11 +28,12 @@ public struct LoadableImage<Source: LoadableImageSource, Placeholder: View, Fail
     public init(
         source: Source,
         accessibilityLabel: LocalizedStringKey? = nil,
+        debounce: Duration = .milliseconds(150),
         key: @escaping (CGSize, ColorScheme, CGFloat) -> Source.Query?,
         @ViewBuilder placeholder: @escaping () -> Placeholder,
         @ViewBuilder failure: @escaping (_ retry: @escaping () -> Void) -> Failure
     ) {
-        _model = State(initialValue: LoadableImageModel(source: source))
+        _model = State(initialValue: LoadableImageModel(source: source, debounce: debounce))
         self.accessibilityLabel = accessibilityLabel
         self.key = key
         self.placeholder = placeholder
@@ -52,8 +53,6 @@ public struct LoadableImage<Source: LoadableImageSource, Placeholder: View, Fail
             .animation(
                 LoadableImageLayout.animation(reduceMotion: reduceMotion, style: style),
                 value: model.image.map { ObjectIdentifier($0.cgImage) })
-            .accessibilityHidden(LoadableImageLayout.isAccessibilityHidden(label: accessibilityLabel))
-            .modifier(OptionalLabel(label: accessibilityLabel))
     }
 
     @ViewBuilder
@@ -63,22 +62,24 @@ public struct LoadableImage<Source: LoadableImageSource, Placeholder: View, Fail
                 .resizable()
                 .aspectRatio(contentMode: style.contentMode)
                 .transition(.opacity)
+                .modifier(ImageAccessibility(label: accessibilityLabel))
         } else if model.error != nil {
             failure { Task { await model.retry() } }
         } else {
-            placeholder()
+            placeholder().modifier(ImageAccessibility(label: accessibilityLabel))
         }
     }
 }
 
-private struct OptionalLabel: ViewModifier {
+/// Applied to the image and placeholder only, never to the failure view.
+private struct ImageAccessibility: ViewModifier {
     let label: LocalizedStringKey?
 
     func body(content: Content) -> some View {
         if let label {
             content.accessibilityLabel(label).accessibilityAddTraits(.isImage)
         } else {
-            content
+            content.accessibilityHidden(LoadableImageLayout.isAccessibilityHidden(label: label))
         }
     }
 }
@@ -88,10 +89,11 @@ public extension LoadableImage where Placeholder == LoadableImagePlaceholder, Fa
     init(
         source: Source,
         accessibilityLabel: LocalizedStringKey? = nil,
+        debounce: Duration = .milliseconds(150),
         key: @escaping (CGSize, ColorScheme, CGFloat) -> Source.Query?
     ) {
         self.init(
-            source: source, accessibilityLabel: accessibilityLabel, key: key,
+            source: source, accessibilityLabel: accessibilityLabel, debounce: debounce, key: key,
             placeholder: { LoadableImagePlaceholder() }, failure: { _ in LoadableImagePlaceholder() })
     }
 }

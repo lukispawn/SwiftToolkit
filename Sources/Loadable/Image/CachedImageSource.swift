@@ -17,6 +17,10 @@ public struct CachedImageSource<Base: LoadableImageSource>: LoadableImageSource 
         self.namespace = namespace
     }
 
+    public func cachedValue(for query: Base.Query) -> LoadableImageValue? {
+        cache.cachedImage(for: query, namespace: namespace)
+    }
+
     public func fetch(query: Base.Query?) async throws -> LoadableImageValue {
         guard let query else { throw LoadableImageError.missingKey }
         let base = base

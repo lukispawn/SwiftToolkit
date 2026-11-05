@@ -66,6 +66,7 @@ public struct MapSnapshotSource: LoadableImageSource {
 @MainActor
 private final class SnapshotJob {
     private let snapshotter: MKMapSnapshotter
+    private var isCancelled = false
 
     init(query: MapSnapshotKey) {
         let options = MKMapSnapshotter.Options()
@@ -88,10 +89,14 @@ private final class SnapshotJob {
     }
 
     func cancel() {
+        isCancelled = true
         snapshotter.cancel()
     }
 
     func run() async throws -> CGImage {
+        // A cancel that arrived before start() would otherwise be lost and the snapshot rendered anyway.
+        try Task.checkCancellation()
+        guard !isCancelled else { throw CancellationError() }
         let snapshot = try await snapshotter.start()
         #if os(iOS)
         guard let image = snapshot.image.cgImage else { throw LoadableImageError.undecodable }

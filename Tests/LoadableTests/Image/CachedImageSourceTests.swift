@@ -77,4 +77,12 @@ struct CachedImageSourceTests {
         _ = try await last.value
         #expect(await base.maxConcurrent <= 2)
     }
+
+    @Test func cachedValueIsAvailableOnlyAfterLoad() async throws {
+        let cached = CachedImageSource(counting(delay: .zero), cache: LoadableImageCache())
+        let key = PreviewImageKey(contentID: "a")
+        #expect(cached.cachedValue(for: key) == nil)
+        let loaded = try await cached.fetch(query: key)
+        #expect(cached.cachedValue(for: key)?.cgImage === loaded.cgImage)
+    }
 }
