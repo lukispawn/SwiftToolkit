@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.9.0 — 2026-11-05
+
+### Added
+
+- `LoadableImage` in the `Loadable` product: an `AsyncImage` counterpart with kept-while-reloading
+  images, debounced same-content reloads, `.loadableImageStyle(_:)` and a retry-capable failure state.
+- `CachedImageSource` over `LoadableImageCache`: one shared load per key, byte-limited in-memory
+  cache, configurable concurrent-load limit (default 2), cancellation that frees slots.
+- Built-in sources: `ImageURLSource` (local and remote), `VideoThumbnailSource`, `MapSnapshotSource`.
+- Preview and test sources (`StaticImageSource`, `DelayedImageSource`, `FailingImageSource`,
+  `CountingImageSource`) and an "Image" page in `LoadablePreviewGallery`.
+- Guide: `Docs/Loadable/Image.md`.
+
 ## 1.8.0 — 2026-10-28
 
 ### Added

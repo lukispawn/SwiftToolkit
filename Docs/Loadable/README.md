@@ -24,6 +24,7 @@ module and not Pentacomp's Combine implementation.
 | An immutable loaded/error/loading fixture | constant store initializers | [Constant states](#constant-states) |
 | Live persistence events | wrapper-owned event subscription + local mutation or refresh | [Local persistence events](#local-persistence-events) |
 | Reducer integration | `snapshots()` and an owned subscription task | [Snapshot streams](#snapshot-streams) |
+| An image loaded on demand (URL, video frame, map) | `LoadableImage` + `CachedImageSource` | [Images](Image.md) |
 | Existing LoadableModel consumer | staged source/store/state migration | [Migration notes](Migration.md) |
 
 The three layers are **Source → Store → View**. A source fetches one result/page;
