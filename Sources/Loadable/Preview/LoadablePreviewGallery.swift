@@ -11,6 +11,7 @@ public struct LoadablePreviewGallery: View {
         case layouts = "Layouts"
         case state = "Merged state"
         case chat = "Chat"
+        case image = "Image"
         public var id: String { rawValue }
     }
     @State private var selected: Example
@@ -37,6 +38,7 @@ public struct LoadablePreviewGallery: View {
                 case .layouts: LoadableCollectionLayoutDemoView(layout: .cards)
                 case .state: LoadableStateDemoView()
                 case .chat: LoadableChat.LoadableView()
+                case .image: LoadableImageDemoView()
                 }
             }
         }
