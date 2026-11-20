@@ -117,6 +117,41 @@ Custom providers can project their own state with
 `LoadableState(hasLoaded:activity:error:operation:)`. Failure severity is derived
 from that leaf's readiness, keeping aggregation rules consistent.
 
+## Hand-driven state
+
+State does not have to come from a store. Work with no `Source` behind it, such as
+a BLE operation driven by coordinators, can keep a private `LoadableState` field,
+assign it from the owning code and expose it through `LoadableStateProviding`. This
+is a supported use, not a workaround:
+
+```swift
+@MainActor @Observable
+final class PeripheralModel: LoadableStateProviding {
+    private var refreshState = LoadableState.idle
+    var loadableState: LoadableState { refreshState }
+
+    func refresh() async {
+        refreshState = .loading
+        do {
+            try await coordinator.refresh()
+            refreshState = .loaded
+        } catch {
+            refreshState = .failed(error)
+        }
+    }
+}
+```
+
+`.failed(_:)` is a blocking load failure (`phase == .failed`). The field is replaced
+on every transition, so a later `.loaded` leaves no stale error behind. Because the
+property is `@Observable`, reading `loadableState` tracks it, and such a model
+participates in `LoadableState.merge(stores:)` next to real stores. Read the first
+error that prevents readiness with `firstBlockingError`; `errors` and `failures`
+still carry every error including retained ones.
+
+`LoadableState` is deliberately not `Equatable`. Compare `phase` (or another
+projected field) in `onChange(of:)`.
+
 ## Initial and constant values
 
 Frozen stores are immediately ready when initialized with a result:

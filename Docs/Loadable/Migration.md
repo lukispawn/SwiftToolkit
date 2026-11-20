@@ -19,7 +19,7 @@ fix-it is supplied.
 | `LoadableElementStore<Value>` | `LoadableValueStore<Source>` |
 | `LoadableCollectionStore<Item, Cursor, Query>` | `LoadableCollectionStore<Source>` |
 | `LoadableElementProvider`, `DefaultElementProvider` | `LoadableValueSource`, `LoadableValue.OperationSource` |
-| `LoadableCollectionProvider`, `DefaultCollectionProvider` | `LoadableCollectionSource`, `LoadableCollection.OperationSource`; preserve normalization for local events explicitly |
+| `LoadableCollectionProvider`, `DefaultCollectionProvider` | `LoadableCollectionSource`, `LoadableCollection.OperationSource`; local-event normalization via the store's `normalize` closure ([guide](README.md#normalizing-the-whole-list)) |
 | `LoadedElementStatus` | `LoadableValue.Snapshot`; inspect content/readiness separately from phase |
 | `LoadedCollectionStatus`, `LoadableCollectionInfo` | `LoadableCollection.Snapshot`; readiness is not a raw phase case |
 | `LoadableCollectionResult` | `LoadableCollection.Page` |
@@ -31,9 +31,34 @@ fix-it is supplied.
 | `DebounceSettings` | `LoadableQueryDebouncer` |
 | `LoadableError` | domain source errors or `LoadableUsageError`, as appropriate |
 
+### Legacy `LoadableState` to `Loadable.LoadableState`
+
+The legacy type was a plain enum of cases that callers assigned by hand. The new
+type is a struct built from readiness, activity and failures. Hand-driven state
+(a private field plus `LoadableStateProviding`, no store behind it) remains a legal
+use; see [Hand-driven state](State.md#hand-driven-state).
+
+| Legacy | `Loadable.LoadableState` |
+| --- | --- |
+| `.notRequested` | `.idle` |
+| `.loading` | `.loading` |
+| `.loaded` | `.loaded` |
+| `.failed(error)` | `.failed(error)` (blocking, `operation: .load`) |
+| `isNotRequested()` | `phase == .idle` |
+| `isLoading()` | `isLoading` (also true while refreshing or paging) or `phase == .loading` |
+| `isLoaded()` | `hasLoaded` |
+| `isError()` | `phase == .failed` |
+| `error` | `firstBlockingError` (all errors: `errors`) |
+| `==` / `onChange(of: state)` | not supported, compare `phase` |
+
+`isLoading` is stricter than a case check: `.loading` over data that already loaded
+cannot be expressed as a phase, it is `hasLoaded == true` with `isRefreshing`.
+Hand-driven code that wants to keep showing old data during a retry should build
+`LoadableState(hasLoaded: true, activity: .refreshing)` instead of `.loading`.
+
 Do not replace a live initial seed with a frozen constant. Do not map legacy
 processContent only to mapItems: local append/update/remove must preserve sorting,
-filtering and limits too. Read [the API guide](README.md) before changing callers.
+filtering and limits too, so pass the same rule as the store's `normalize` closure. Read [the API guide](README.md) before changing callers.
 
 ## Consumer adoption proposal
 

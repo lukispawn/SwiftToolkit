@@ -11,6 +11,8 @@ public final class LoadableCollectionStore<Source: LoadableCollectionSource> {
     public typealias Snapshot = LoadableCollection.Snapshot<Item, Cursor, Failure, Query>
     public typealias Direction = LoadableCollection.Direction
     public typealias Merge = @Sendable (_ existing: [Item], _ incoming: [Item], _ direction: Direction) -> [Item]
+    /// Rewrites the whole accumulated list (sort, clamp, filter). Must be idempotent and deterministic.
+    public typealias Normalize = @Sendable (_ items: [Item]) -> [Item]
 
     public private(set) var snapshot: Snapshot {
         didSet { snapshotChannel.yield(snapshot) }
@@ -29,6 +31,7 @@ public final class LoadableCollectionStore<Source: LoadableCollectionSource> {
     @ObservationIgnored let source: Source
     @ObservationIgnored let configuration: LoadableCollection.Configuration
     @ObservationIgnored let merge: Merge
+    @ObservationIgnored let normalize: Normalize?
     @ObservationIgnored var inFlight: RequestHandle<[Item]>?
     @ObservationIgnored var failedFetch: Fetch?
     @ObservationIgnored private let snapshotChannel = SnapshotChannel<Snapshot>()
@@ -50,10 +53,12 @@ public final class LoadableCollectionStore<Source: LoadableCollectionSource> {
     public init(
         source: Source,
         configuration: LoadableCollection.Configuration = .init(),
-        merge: Merge? = nil
+        merge: Merge? = nil,
+        normalize: Normalize? = nil
     ) {
         self.source = source
         self.configuration = configuration
+        self.normalize = normalize
         self.merge = merge ?? { existing, incoming, direction in
             LoadableCollection.mergeByID(existing: existing, incoming: incoming, direction: direction)
         }
@@ -110,12 +115,13 @@ public final class LoadableCollectionStore<Source: LoadableCollectionSource> {
         failedFetch = nil
         hasSession = false
         snapshot = .loaded(
-            LoadableCollection.mergeByID(existing: [], incoming: items, direction: .next),
+            normalized(LoadableCollection.mergeByID(existing: [], incoming: items, direction: .next)),
             totalCount: totalCount, query: snapshot.query
         )
     }
 
-    /// Replaces an existing row without changing membership or server cursors.
+    /// Replaces an existing row without changing server cursors or `totalCount`.
+    /// With a `normalize` hook the row may move (sort key change) or the list may be clamped.
     @discardableResult
     public func updateItem(_ item: Item) -> Bool {
         guard !isConstant, snapshot.hasLoaded,
@@ -124,6 +130,7 @@ public final class LoadableCollectionStore<Source: LoadableCollectionSource> {
         failedFetch = nil
         var updated = snapshot
         updated.items[index] = item
+        updated.items = normalized(updated.items)
         updated.phase = .idle
         snapshot = updated
         return true
@@ -291,16 +298,18 @@ extension LoadableCollectionStore {
         return request
     }
 
+    private func normalized(_ items: [Item]) -> [Item] { normalize?(items) ?? items }
+
     private func accept(_ page: Page, for fetch: Fetch) {
         if fetch.replacesItems {
             snapshot = .loaded(
-                LoadableCollection.mergeByID(existing: [], incoming: page.items, direction: .next),
+                normalized(LoadableCollection.mergeByID(existing: [], incoming: page.items, direction: .next)),
                 nextCursor: page.nextCursor, previousCursor: page.previousCursor,
                 totalCount: page.totalCount, query: fetch.query
             )
         } else {
             var updated = snapshot
-            updated.items = merge(items, page.items, fetch.direction)
+            updated.items = normalized(merge(items, page.items, fetch.direction))
             if fetch.direction == .next { updated.nextCursor = page.nextCursor }
             else { updated.previousCursor = page.previousCursor }
             if let totalCount = page.totalCount { updated.totalCount = totalCount }

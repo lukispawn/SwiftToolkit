@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.11.0 — 2026-11-20
+
+### Added
+
+- `LoadableState.failed(_:)`: a blocking load failure (`phase == .failed`), symmetric to
+  `.idle`, `.loading` and `.loaded`, for state driven by hand without a store.
+- `LoadableState.firstBlockingError`: the first error that prevents readiness, or `nil`.
+- `LoadableCollectionStore(source:configuration:merge:normalize:)`: optional
+  `normalize: @Sendable ([Item]) -> [Item]` (default `nil`, no behavior change). Applied to
+  the whole list after every merged page and after each effective `setItems`, `appendItems`,
+  `removeItem` and `updateItem`. Cursors are never recomputed and `totalCount` stays the
+  server's total, so a clamp or filter can leave `items.count` below `totalCount`.
+  `updateItem` may move a row when its sort key changes.
+- Docs: legacy-to-new `LoadableState` mapping table in `Migration.md`, "Hand-driven state"
+  recipe in `State.md` and "Normalizing the whole list" in the API guide.
+
+`LoadableModel` is unchanged.
+
 ## 1.10.0 — 2026-11-05
 
 ### Added

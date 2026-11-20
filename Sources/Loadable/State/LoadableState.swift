@@ -35,6 +35,8 @@ public struct LoadableState: Sendable {
     public var hasLoaded: Bool { storeCount > 0 && loadedStoreCount == storeCount }
     public var errors: [any Error] { failures.map(\.error) }
     public var blockingFailures: [Failure] { failures.filter(\.isBlocking) }
+    /// The first error that prevents readiness, in input order. Non-nil exactly when `phase == .failed`.
+    public var firstBlockingError: (any Error)? { blockingFailures.first?.error }
 
     public var phase: Phase {
         if hasLoaded { return .loaded }
@@ -58,6 +60,10 @@ public struct LoadableState: Sendable {
     public static var idle: Self { .init(hasLoaded: false) }
     public static var loading: Self { .init(hasLoaded: false, activity: .loading) }
     public static var loaded: Self { .init(hasLoaded: true) }
+
+    /// A blocking load failure with no successful result (`phase == .failed`).
+    /// Useful for state driven by hand, without a store behind it.
+    public static func failed(_ error: any Error) -> Self { .init(hasLoaded: false, error: error) }
 
     /// Pure aggregation of current states. Does not start, await, cancel or retry work.
     /// Counts are additive: nested groups behave like their flattened leaves.

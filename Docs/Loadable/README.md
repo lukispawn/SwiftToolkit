@@ -419,9 +419,56 @@ server total, not a count of the filtered rows.
 
 Neither `mapItems` nor the custom page merge closure is a universal post-mutation
 hook. In particular, a migration from legacy `processContent` must preserve
-sorting, max-count limits and filtering for local event mutations too. Normalize
-the authoritative collection in the owning wrapper before committing it, or
-design a separate tested domain adapter. Do not silently drop that invariant.
+sorting, max-count limits and filtering for local event mutations too. Do not
+silently drop that invariant: pass the store a `normalize` closure (below), or
+normalize in the owning wrapper before committing.
+
+### Normalizing the whole list
+
+`LoadableCollectionStore(source:configuration:merge:normalize:)` takes an optional
+`normalize: @Sendable ([Item]) -> [Item]`. It defaults to `nil`, which leaves every
+code path exactly as before. When set, the store applies it to the complete
+accumulated list after each of these, and only after a mutation that took effect:
+
+- a reload or refresh page, after the ID merge (so a retained refresh is normalized too);
+- a next/previous page, after the page `merge` closure;
+- `setItems`, `appendItems` and `removeItem` (the latter two go through `setItems`,
+  so the closure runs once per call);
+- `updateItem`, after the row is replaced.
+
+A call that does nothing (`updateItem` for an unknown ID, `removeItem` for a missing
+ID, `appendItems([])`, any mutation on a constant store) does not run the closure.
+
+```swift
+let store = LoadableCollectionStore(
+    source: CollectionsSource(),
+    normalize: { rows in rows.sorted { $0.sortIndex < $1.sortIndex } }
+)
+```
+
+Contract and consequences:
+
+- The closure must be deterministic and idempotent: normalizing an already
+  normalized list returns it unchanged. It runs on the MainActor inside the commit,
+  so keep it cheap (the cost is one pass over the loaded rows per commit; sorting
+  is O(n log n) in the number of accumulated rows, not just the new page).
+- It should keep IDs unique. Reordering, clamping and filtering are all allowed.
+- Cursors are never recomputed. A server cursor still describes the server's
+  position, so clamping or filtering does not make `loadMore()` re-request or skip
+  anything; dropped rows are simply not shown. `setItems`, `appendItems` and
+  `removeItem` still invalidate cursors and `totalCount` exactly as documented
+  there, with or without the hook.
+- `totalCount` stays the server's total, never `items.count`. After a clamp or a
+  filter, `items.count` can be smaller than `totalCount`, as with page-level
+  `mapItems`. Do not use `totalCount` as a row count for a normalized list.
+- `updateItem` keeps cursors and `totalCount`. If the new row changes the sort
+  key, the hook moves it to its new position; if the hook clamps, the row that
+  falls off the end disappears. The method still returns `true` because the update
+  itself was applied.
+- Sorting combined with page merge: a page that arrives with rows that sort before
+  already shown rows will insert them above. UI that must not jump (chat-style
+  history) should keep its own ordering policy in `merge` and use `normalize` only
+  for invariants such as a maximum length.
 
 ## Local persistence events
 
@@ -519,7 +566,8 @@ contracts that the new engine deliberately leaves to domain wrappers.
    caller-owned `load()` can also throw CancellationError. Retry only the failed
    operation and preserve the query, cursor and direction.
 6. Use the default ID merge unless domain ordering requires more. Test overlapping
-   pages and local-event normalization; mapItems handles fetched pages only.
+   pages and local-event normalization; mapItems handles fetched pages only, use
+   the store's `normalize` hook for rules that must also hold after local mutations.
 7. Use Pagination at the corresponding edge for automatic loading. Custom
    pagination builders own their visibility behavior. Do not add unbounded retry
    loops, global cancellation on every disappearance, or a second paging task.
